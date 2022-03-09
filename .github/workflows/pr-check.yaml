@@ -56,7 +56,14 @@ jobs:
         run: yarn compile:pull-request
 
       - name: List Build
-        run: ls -la ./dist/
+        run: ls ./dist/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows-exe
+          path: ./dist/container-desktop-*.exe
+
+
 
   linux:
     name: Linux
@@ -92,6 +99,15 @@ jobs:
       - name: List Build
         run: ls -la ./dist/
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: linux-appimage
+          path: ./dist/container-desktop-*.AppImage
+      - uses: actions/upload-artifact@v3
+        with:
+          name: linux-snap
+          path: ./dist/container-desktop-*.snap
+
   darwin:
     name: macOS
     runs-on: macos-11
@@ -125,3 +141,9 @@ jobs:
 
       - name: List Build
         run: ls -la ./dist/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: macos-dmg
+          path: ./dist/container-desktop-*.dmg
+

@@ -36,6 +36,15 @@ const config = {
     'packages/**/dist/**',
     'extensions/**/builtin/*.cdix/**',
   ],
+  mac: {
+    target: {
+      target: 'default',
+      arch: [
+        'x64',
+        'arm64'
+      ]
+    },
+  },
   dmg: {
     contents: [
       {
@@ -55,5 +64,7 @@ const config = {
     version: process.env.VITE_APP_VERSION,
   },
 };
+
+
 
 module.exports = config;
