@@ -56,7 +56,7 @@ jobs:
         run: yarn compile:pull-request
 
       - name: List Build
-        run: ls build/
+        run: ls -la
 
   linux:
     name: Linux
@@ -90,7 +90,7 @@ jobs:
         run: yarn compile:pull-request
 
       - name: List Build
-        run: ls build/
+        run: ls -la
 
   darwin:
     name: macOS
@@ -124,4 +124,4 @@ jobs:
         run: yarn compile:pull-request
 
       - name: List Build
-        run: ls build/
+        run: ls -la
