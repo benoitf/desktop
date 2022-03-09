@@ -55,6 +55,9 @@ jobs:
         timeout-minutes: 20
         run: yarn compile:pull-request
 
+      - name: List Build
+        run: ls -la build
+
   linux:
     name: Linux
     runs-on: ubuntu-20.04
@@ -86,6 +89,8 @@ jobs:
         timeout-minutes: 20
         run: yarn compile:pull-request
 
+      - name: List Build
+        run: ls -la build
 
   darwin:
     name: macOS
@@ -117,3 +122,6 @@ jobs:
       - name: Run Build
         timeout-minutes: 20
         run: yarn compile:pull-request
+
+      - name: List Build
+        run: ls -la build
