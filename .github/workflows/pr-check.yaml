@@ -61,9 +61,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: windows-exe
-          path: ./dist/container-desktop-*.exe
-
-
+          path: ./dist/container-desktop*.exe
 
   linux:
     name: Linux
@@ -106,7 +104,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: linux-snap
-          path: ./dist/container-desktop-*.snap
+          path: ./dist/container-desktop_*.snap
 
   darwin:
     name: macOS
