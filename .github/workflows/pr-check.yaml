@@ -53,7 +53,7 @@ jobs:
 
       - name: Run Build
         timeout-minutes: 20
-        run: yarn compile:flat
+        run: yarn compile:pull-request
 
   linux:
     name: Linux
@@ -84,7 +84,7 @@ jobs:
 
       - name: Run Build
         timeout-minutes: 20
-        run: yarn compile:flat
+        run: yarn compile:pull-request
 
 
   darwin:
@@ -116,4 +116,4 @@ jobs:
 
       - name: Run Build
         timeout-minutes: 20
-        run: yarn compile:flat
+        run: yarn compile:pull-request
