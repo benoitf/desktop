@@ -73,6 +73,10 @@ jobs:
     strategy:
       matrix:
         os: [windows-2022, ubuntu-20.04, macos-11]
+        include:
+          - os: macos-11
+            cscLink: ${{ secrets.CSC_LINK }}
+            cscKeyPassword: ${{ secrets.CSC_KEY_PASSWORD }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
