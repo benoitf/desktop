@@ -16,24 +16,17 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-import { writable } from 'svelte/store';
+import React from 'react';
+import './App.css';
+import { Containers } from './Containers';
 
-export async function fetchExtensions() {
-  const result = await window.listExtensions();
-  extensionInfos.set(result);
-}
+const App: React.FC = () => {
+  return (
+    <>
+      <h1 className="header">Podman Desktop Fusion</h1>
+      <Containers title="My super list of containers" />
+    </>
+  );
+};
 
-fetchExtensions();
-export const extensionInfos = writable([]);
-
-// need to refresh when extension is started or stopped
-window.addEventListener('extension-started', () => {
-  fetchExtensions();
-});
-window.addEventListener('extension-stopped', () => {
-  fetchExtensions();
-});
-
-window?.events.receive('extension-started', () => {
-  fetchExtensions();
-});
+export default App;

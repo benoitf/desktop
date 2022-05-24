@@ -16,25 +16,14 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function writeToTerminal(xterm: any, data: string[], colorPrefix: string): void {
-  if (Array.isArray(data)) {
-    for (const it of data) {
-      writeMultilineString(xterm, it, colorPrefix);
-    }
-  } else {
-    writeMultilineString(xterm, data, colorPrefix);
-  }
-}
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function writeMultilineString(xterm: any, data: string, colorPrefix: string): void {
-  if (data.includes('\n')) {
-    const toWrite = data.split('\n');
-    for (const s of toWrite) {
-      xterm.write(colorPrefix + s + '\n\r');
-    }
-  } else {
-    xterm.write(colorPrefix + data + '\r');
-  }
-}
+const root = createRoot(document.getElementById('app'));
+
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

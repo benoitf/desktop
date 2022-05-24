@@ -19,7 +19,7 @@
 module.exports = {
   content: [
     'packages/renderer/index.html',
-    'packages/renderer/src/**/*.{svelte,css}',
+    'packages/renderer/src/**/*.{tsx,css}',
   ],
   theme: {
     extend: {

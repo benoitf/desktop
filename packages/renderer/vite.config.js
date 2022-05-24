@@ -18,7 +18,7 @@
 
 /* eslint-env node */
 import {join} from 'path';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 const PACKAGE_ROOT = __dirname;
@@ -33,9 +33,9 @@ export default defineConfig({
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
     },
   },
-  plugins: [svelte()],
+  plugins: [react()],
   optimizeDeps: {
-    exclude: ['tinro'],
+    exclude: [],
   },
   base: '',
   server: {
