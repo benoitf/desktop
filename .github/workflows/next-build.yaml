@@ -75,7 +75,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2022, ubuntu-20.04, macos-11]
+        os: [windows-2022]
+        # ,ubuntu-20.04, macos-11
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
@@ -119,7 +120,7 @@ jobs:
           flatpak install flathub --user -y org.freedesktop.Platform/x86_64/21.08
 
       - name: Set macOS environment variables
-        if: ${{ matrix.os=='macos-11' }}
+        if: startsWith(matrix.os, 'macos')
         run: |
           echo "CSC_LINK=${{secrets.CSC_LINK}}" >> $GITHUB_ENV
           echo "CSC_KEY_PASSWORD=${{secrets.CSC_KEY_PASSWORD}}" >> $GITHUB_ENV
@@ -127,9 +128,27 @@ jobs:
           echo "APPLE_ID_PASSWORD=${{secrets.APPLE_ID_PASSWORD}}" >> $GITHUB_ENV
           echo "APPLE_TEAM_ID=${{secrets.APPLE_TEAM_ID}}" >> $GITHUB_ENV
 
+      - name: Install Azure SignTool on Windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          dotnet tool install --global AzureSignTool --version 3.0.0
+          echo "AZURE_KEY_VAULT_CERTIFICATE=${{secrets.AZURE_KEY_VAULT_CERTIFICATE}}" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "AZURE_KEY_VAULT_CLIENT_ID=${{secrets.AZURE_KEY_VAULT_CLIENT_ID}}" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "AZURE_KEY_VAULT_SECRET=${{secrets.AZURE_KEY_VAULT_SECRET}}" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "AZURE_KEY_VAULT_TENANT_ID=${{secrets.AZURE_KEY_VAULT_TENANT_ID}}" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "AZURE_KEY_VAULT_URL=${{secrets.AZURE_KEY_VAULT_URL}}" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Check if we have env variables
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          node -e "(process.env.AZURE_KEY_VAULT_CERTIFICATE) ? console.log('variable  AZURE_KEY_VAULT_CERTIFICATE is set') : console.log('variable AZURE_KEY_VAULT_CERTIFICATE unset')"
+          node -e "(process.env.AZURE_KEY_VAULT_CLIENT_IDD) ? console.log('variable is set') : console.log('variable unset')"
+
       - name: Run Build
         timeout-minutes: 20
         run: yarn compile:next
+        env:
+          FOOBAR: 'foobar'
 
   release:
     needs: [tag, build]
