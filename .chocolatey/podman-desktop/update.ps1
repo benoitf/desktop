@@ -1,6 +1,6 @@
 import-module au
 
-$releases = 'https://github.com/containers/podman-desktop/releases'
+$releases = 'https://github.com/containers/podman-desktop/releases/latest'
 
 function global:au_SearchReplace {
    @{
