@@ -14,7 +14,7 @@ function global:au_SearchReplace {
 function global:au_GetLatest {
     $download_page = Invoke-WebRequest -Uri $releases
 
-    $url64   = $download_page.links | ? href -match '.msi$' | % href | select -First 1
+    $url64   = $download_page.links | ? href -match '-setup.exe$' | % href | select -First 1
     $version = (Split-Path ( Split-Path $url64 ) -Leaf).Substring(1)
 
     @{
