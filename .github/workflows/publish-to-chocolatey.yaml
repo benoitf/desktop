@@ -88,7 +88,7 @@ jobs:
           git add .chocolatey
           git commit --signoff -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
           git push origin "$bumpedBranchName"
-          echo "${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }}" > pr-title 
+          New-Item -Path . -Name "pr-title" -ItemType "file" -Value "📢 ${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }} 🥳"
           $pullRequestUrl = gh pr create --title "chore: Update Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main" -R "benoitf/desktop"
           echo "📢 Pull request created: $pullRequestUrl"
           echo "➡️ Flag the PR as being ready for review"
