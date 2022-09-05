@@ -82,13 +82,14 @@ jobs:
       - name: Create the PR to bump the version in the main branch
         run: |
           git config --local user.name ${{ github.actor }}
+          git config --local user.email "fbenoit@redhat.com"
           $bumpedBranchName = "update-chocolatey-for-${{ needs.version.outputs.desktopVersion }}"
           git checkout -b $bumpedBranchName
           git add .chocolatey
-          git commit -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
-          git push origin $bumpedBranchName
-          gh pr create --title "chore: Update Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main"
-          
+          git commit --signoff -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
+          git push origin "$bumpedBranchName"
+          echo "${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }}" > pr-title 
+          $pullRequestUrl = gh pr create --title "chore: Update Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main" -R "benoitf/desktop"
           echo "📢 Pull request created: $pullRequestUrl"
           echo "➡️ Flag the PR as being ready for review"
           gh pr ready "$pullRequestUrl"
@@ -98,7 +99,6 @@ jobs:
           gh pr merge "$pullRequestUrl" --auto --rebase
         env:
           GH_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}  
-          GITHUB_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}  
       - name: Publish Package to Chocolatey
         run: |
           if ($env:automaticUpdateForce -eq 'true') {
