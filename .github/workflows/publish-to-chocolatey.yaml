@@ -88,10 +88,10 @@ jobs:
           git commit -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
           git push origin $bumpedBranchName
           echo "📢 ${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }} 🥳" > pr-title 
-          $pullRequestUrl = gh pr create --title "chore: 📢 nUpdate Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head $bumpedBranchName --base "main"
+          $pullRequestUrl = gh pr create --title "chore: 📢 nUpdate Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main"
           echo "📢 Pull request created: $pullRequestUrl"
           echo "➡️ Flag the PR as being ready for review"
-          gh pr ready $pullRequestUrl
+          gh pr ready "$pullRequestUrl"
           echo "🔅 Mark the PR as being ok to be merged automatically"
           gh pr merge "$pullRequestUrl" --auto --rebase
         env:
