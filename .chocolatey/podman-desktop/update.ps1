@@ -25,6 +25,7 @@ function global:au_GetLatest {
     @{
         URL64   = 'https://github.com' + $url64
         Version = $version
+        ReleaseNotes = $releases
     }
 }
 
