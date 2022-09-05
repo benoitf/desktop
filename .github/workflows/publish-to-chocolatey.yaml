@@ -95,6 +95,7 @@ jobs:
           echo "🔅 Mark the PR as being ok to be merged automatically"
           gh pr merge "$pullRequestUrl" --auto --rebase
         env:
+          GH_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}  
           GITHUB_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}  
       - name: Publish Package to Chocolatey
         run: |
