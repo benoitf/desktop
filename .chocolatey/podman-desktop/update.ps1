@@ -1,6 +1,7 @@
 import-module au
 
-$releases = 'https://github.com/containers/podman-desktop/releases/latest'
+$version = $env:VERSION
+$releases = 'https://github.com/containers/podman-desktop/releases/tag/v' + $version
 
 function global:au_SearchReplace {
    @{
@@ -8,6 +9,10 @@ function global:au_SearchReplace {
             "(?i)(^\s*url64bit\s*=\s*)('.*')"   = "`$1'$($Latest.URL64)'"
             "(?i)(^\s*checksum64\s*=\s*)('.*')" = "`$1'$($Latest.Checksum64)'"
         }
+        ".\podman-desktop.nuspec" = @{
+            "\<version\>.+" = "<version>$($Latest.Version)</version>"
+            "\<releaseNotes\>.+" = "<releaseNotes>$($Latest.ReleaseNotes)</releaseNotes>"
+    }
     }
 }
 
