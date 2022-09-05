@@ -67,7 +67,7 @@ jobs:
       - name: Install the Chocolatey Automatic Package Updater Module
         run: cinst au      
       - name: Build the Podman Desktop chocolatey Package by making sure we're using the latest release
-        working-directory: ./chocolatey/podman-desktop
+        working-directory: ./.chocolatey/podman-desktop
         run: |
           if ($env:automaticUpdateForce -eq 'true') {
               $au_Force = $true; ./update.ps1
@@ -103,7 +103,7 @@ jobs:
           } else {
               Push-Package
           }
-        working-directory: ./chocolatey/podman-desktop
+        working-directory: ./.chocolatey/podman-desktop
         env:
           api_key: ${{ secrets.CHOCOLATEY_API_KEY }}
           automaticUpdateForce: ${{ github.event.inputs.force }}
