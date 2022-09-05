@@ -78,16 +78,16 @@ jobs:
         env:
           au_Push: ${{ github.event.inputs.force }}
           automaticUpdateForce: ${{ github.event.inputs.force }}
-          VERSION: ${{ steps.VERSION.outputs.desktopVersion }}
+          VERSION: ${{ needs.version.outputs.desktopVersion }}
       - name: Create the PR to bump the version in the main branch
         run: |
           git config --local user.name ${{ github.actor }}
-          $bumpedBranchName="update-chocolatey-for-${{ steps.VERSION.outputs.desktopVersion }}"
+          $bumpedBranchName="update-chocolatey-for-${{ needs.version.outputs.desktopVersion }}"
           git checkout -b $bumpedBranchName
           git add .chocolatey
-          git commit -m "chore: Update chocolatey packages for ${{ steps.VERSION.outputs.desktopVersion }}"
+          git commit -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
           git push origin $bumpedBranchName
-          echo "📢 ${{ steps.VERSION.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ steps.VERSION.outputs.desktopVersion }} 🥳" > pr-title 
+          echo "📢 ${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }} 🥳" > pr-title 
           $pullRequestUrl=gh pr create --title "chore: 📢 Bump version to ${bumpedVersion}" --body-file /tmp/pr-title --head "$bumpedBranchName" --base "main"
           echo "📢 Pull request created: $pullRequestUrl"
           echo "➡️ Flag the PR as being ready for review"
