@@ -111,6 +111,5 @@ jobs:
           api_key: ${{ secrets.CHOCOLATEY_API_KEY }}
           automaticUpdateForce: ${{ github.event.inputs.force }}
       - name: Setup tmate session
-        if: $
+        if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
-        
