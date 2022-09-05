@@ -78,7 +78,7 @@ jobs:
         env:
           au_Push: ${{ github.event.inputs.force }}
           automaticUpdateForce: ${{ github.event.inputs.force }}
-          VERSION: ${{ needs.get-version.outputs.version }}
+          VERSION: ${{ steps.VERSION.outputs.desktopVersion }}
       - name: Create the PR to bump the version in the main branch
         run: |
           git config --local user.name ${{ github.actor }}
