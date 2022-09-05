@@ -87,12 +87,14 @@ jobs:
           git add .chocolatey
           git commit -m "chore: Update chocolatey packages for ${{ needs.version.outputs.desktopVersion }}"
           git push origin $bumpedBranchName
-          echo "📢 ${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }} 🥳" > pr-title 
-          gh pr create --title "chore: 📢 nUpdate Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main"
+          gh pr create --title "chore: Update Chocolatey package to ${{ needs.version.outputs.desktopVersion }}" --body-file ./pr-title --head "$bumpedBranchName" --base "main"
+          
           echo "📢 Pull request created: $pullRequestUrl"
           echo "➡️ Flag the PR as being ready for review"
           gh pr ready "$pullRequestUrl"
           echo "🔅 Mark the PR as being ok to be merged automatically"
+          # echo "${{ needs.version.outputs.desktopVersion }} has been released`n`nUpdate Chocolatey packages for ${{ needs.version.outputs.desktopVersion }}" > pr-title 
+
           gh pr merge "$pullRequestUrl" --auto --rebase
         env:
           GH_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}  
@@ -108,3 +110,7 @@ jobs:
         env:
           api_key: ${{ secrets.CHOCOLATEY_API_KEY }}
           automaticUpdateForce: ${{ github.event.inputs.force }}
+      - name: Setup tmate session
+        if: $
+        uses: mxschmitt/action-tmate@v3
+        
