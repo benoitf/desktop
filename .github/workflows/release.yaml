@@ -89,12 +89,13 @@ jobs:
       - name: Create the PR to bump the version in the main branch
         run: |
           git config --local user.name ${{ github.actor }}
+          git config --local user.email "fbenoit@redhat.com"
           bumpedVersion=$(echo "${{ steps.TAG_UTIL.outputs.desktopVersion }}" | awk -F. -v OFS=. '{$NF += 1 ; print}')
           bumpedBranchName="bump-to-${bumpedVersion}"
           git checkout -b "${bumpedBranchName}"
           sed -i  "s#version\":\ \"\(.*\)\",#version\":\ \"${bumpedVersion}-next\",#g" package.json
           git add package.json
-          git commit --amend -m "chore: bump version to ${bumpedVersion}"
+          git commit -s --amend -m "chore: bump version to ${bumpedVersion}"
           git push origin "${bumpedBranchName}"
           echo -e "📢 Bump version to ${bumpedVersion}\n\n${{ steps.TAG_UTIL.outputs.desktopVersion }} has been released.\n\n Time to switch to the new ${bumpedVersion} version 🥳" > /tmp/pr-title 
           pullRequestUrl=$(gh pr create --title "chore: 📢 Bump version to ${bumpedVersion}" --body-file /tmp/pr-title --head "${bumpedBranchName}" --base "main")
