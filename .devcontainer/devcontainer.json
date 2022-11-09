@@ -25,11 +25,11 @@
         "--memory-swap=10g",
         "--memory=8g"
    ],
-   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/postStartCommand.sh",
+   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/postStartCommand.sh",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
-    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/onCreateCommand.sh",
-    "updateContentCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/onCreateCommand.sh",
+    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/onCreateCommand.sh",
+    "updateContentCommand": "${containerWorkspaceFolder}/.devcontainer/updateContentCommand.sh",
     "remoteEnv": {
         "DISPLAY": ":0"
     },
