@@ -16,11 +16,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# launch podman desktop
-cd dist/linux-unpacked/&& ./podman-desktop &
-
 # Need to start all services
 /usr/bin/supervisord -c /etc/supervisord.conf &
+
+# wait X server to be ready or after 2mn exit
+timeout 120 bash -c 'until xdpyinfo -display :0 &> /dev/null; do sleep 1; done'
+
+# launch podman desktop
+cd dist/linux-unpacked/&& ./podman-desktop &
 
 # launch the website rendering
 cd website && yarn start

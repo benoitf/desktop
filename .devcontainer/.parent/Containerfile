@@ -16,12 +16,14 @@ RUN dnf -y update && \
                    at-spi2-atk \
                    cups-libs \
                    gtk3 \
-                   # For remote Display
+                   # for remote Display
                    fluxbox \
                    tigervnc-server \
                    xorg-x11-fonts-Type1 \
                    novnc \
                    supervisor \
+                   xdpyinfo \
+                   # for podman
                    podman \
                    fuse-overlayfs --exclude container-selinux \
                    xterm && \
