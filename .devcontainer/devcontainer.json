@@ -21,11 +21,20 @@
         "--security-opt",
         "label=disable",
         "--security-opt",
-        "apparmor=unconfined"
+        "apparmor=unconfined",
+        "--memory-swap=6g",
+        "--memory=4g"
    ],
    "postStartCommand": "/entrypoint.sh",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
     "onCreateCommand": "yarn",
-    "updateContentCommand": "yarn"
+    "updateContentCommand": "yarn",
+    "portsAttributes": {
+		"8080": {
+			"label": "vnc",
+            "onAutoForward": "openBrowser"
+		}
+	},
+
 }

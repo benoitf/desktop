@@ -1,10 +1,11 @@
 FROM quay.io/fedora/fedora:37
 
-# install Node.js
+# install Node.js + yarn
 ENV NODE_VERSION 16.18.1
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" && \
     tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 && \
-    rm "node-v$NODE_VERSION-linux-x64.tar.gz"
+    rm "node-v$NODE_VERSION-linux-x64.tar.gz" && \
+    npm install -g yarn
 
 RUN dnf -y update && \
     yum -y reinstall shadow-utils && \
@@ -41,12 +42,12 @@ ADD https://raw.githubusercontent.com/containers/libpod/master/contrib/podmanima
 # set permissions
 RUN chown podman-desktop:podman-desktop -R /home/podman-desktop && chmod 644 /etc/containers/containers.conf && \
     mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers; touch /var/lib/shared/overlay-images/images.lock; touch /var/lib/shared/overlay-layers/layers.lock; touch /var/lib/shared/vfs-images/images.lock; touch /var/lib/shared/vfs-layers/layers.lock && \
-    mkdir -p /run/podman-desktop/1000 && chown podman-desktop:podman-desktop /run/podman-desktop/1000
+    mkdir -p /run/user/1000 && chown podman-desktop:podman-desktop /run/user/1000
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
 # socket path for podman
-ENV XDG_RUNTIME_DIR=/run/podman-desktop/1000
+ENV XDG_RUNTIME_DIR=/run/user/1000
 
 #ENTRYPOINT [ "/entrypoint.sh" ]
 USER podman-desktop
