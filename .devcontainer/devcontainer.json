@@ -25,11 +25,14 @@
         "--memory-swap=10g",
         "--memory=8g"
    ],
-   "postStartCommand": "/entrypoint.sh",
+   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/postStartCommand.sh",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
-    "onCreateCommand": "yarn",
-    "updateContentCommand": "yarn",
+    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/onCreateCommand.sh",
+    "updateContentCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/onCreateCommand.sh",
+    "remoteEnv": {
+        "DISPLAY": ":0"
+    },
     "portsAttributes": {
 		"8080": {
 			"label": "vnc",
