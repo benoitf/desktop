@@ -37,8 +37,7 @@
             "onAutoForward": "openPreview"
 		},
         "3000": {
-			"label": "website",
-            "onAutoForward": "openBrowser"
+			"label": "website"
 		}
 	}
 
