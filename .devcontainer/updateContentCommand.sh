@@ -16,9 +16,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# This script is run inside the container after the repo has been cloned.
-# Launch yarn to install dependencies and build the project.
-yarn
-
-# build podman-desktop
-MODE=production yarn run build && yarn run electron-builder build --linux --dir --config .electron-builder.config.js
+# Do nothing for now (maybe need to use postStartCommand.sh)
