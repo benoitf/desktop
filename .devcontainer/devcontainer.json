@@ -32,7 +32,7 @@
         "DISPLAY": ":0"
     },
     "portsAttributes": {
-		"8080": {
+		"9000": {
 			"label": "vnc",
             "onAutoForward": "openPreview"
 		},
