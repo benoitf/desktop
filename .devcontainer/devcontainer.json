@@ -36,8 +36,12 @@
     "portsAttributes": {
 		"8080": {
 			"label": "vnc",
+            "onAutoForward": "openPreview"
+		},
+        "3000": {
+			"label": "website",
             "onAutoForward": "openBrowser"
 		}
-	},
+	}
 
 }
