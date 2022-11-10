@@ -21,9 +21,7 @@
         "--security-opt",
         "label=disable",
         "--security-opt",
-        "apparmor=unconfined",
-        "--memory-swap=10g",
-        "--memory=8g"
+        "apparmor=unconfined"
    ],
    "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/postStartCommand.sh",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",

@@ -28,8 +28,8 @@ echo "Launching Podman Desktop"
 cd dist/linux-unpacked/&& ./podman-desktop &
 
 
-# Launch the 8080 redirect after 5 seconds
-sleep 5
+# Launch the 8080 redirect after 20 seconds
+sleep 20
 websockify --web=/usr/share/novnc localhost:8080 localhost:5900 &
 
 # launch the website rendering
