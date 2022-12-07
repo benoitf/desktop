@@ -104,7 +104,7 @@ function Hero() {
               Containers and Kubernetes for application developers
             </h1>
             <p className="text-base md:text-lg">
-              Podman Desktop is an open source graphical tool enabling you to seamlessly work with containers and
+              Podman Desktop is an open source this is my pr change graphical tool enabling you to seamlessly work with containers and
               Kubernetes from your local environment.
             </p>
             <div className="flex-none">
