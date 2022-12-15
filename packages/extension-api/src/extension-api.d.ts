@@ -198,6 +198,12 @@ declare module '@tmpwip/extension-api' {
     create(params: { [key: string]: any }): Promise<void>;
   }
 
+  // create a kubernetes provider
+  export interface KubernetesProviderConnectionFactory {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    create(params: { [key: string]: any }): Promise<void>;
+  }
+
   export interface Link {
     title: string;
     url: string;
@@ -249,6 +255,10 @@ declare module '@tmpwip/extension-api' {
     setContainerProviderConnectionFactory(
       containerProviderConnectionFactory: ContainerProviderConnectionFactory,
     ): Disposable;
+    setKubernetesProviderConnectionFactory(
+      containerProviderConnectionFactory: KubernetesProviderConnectionFactory,
+    ): Disposable;
+
     registerContainerProviderConnection(connection: ContainerProviderConnection): Disposable;
     registerKubernetesProviderConnection(connection: KubernetesProviderConnection): Disposable;
     registerLifecycle(lifecycle: ProviderLifecycle): Disposable;
@@ -296,8 +306,22 @@ declare module '@tmpwip/extension-api' {
     export function executeCommand<T = unknown>(command: string, ...rest: any[]): PromiseLike<T>;
   }
 
+  export interface UnregisterContainerConnectionEvent {
+    providerId: string;
+  }
+  export interface UnregisterKubernetesConnectionEvent {
+    providerId: string;
+  }
+  export interface RegisterKubernetesConnectionEvent {
+    providerId: string;
+  }
+  export interface RegisterContainerConnectionEvent {
+    providerId: string;
+  }
   export namespace provider {
     export function createProvider(provider: ProviderOptions): Provider;
+    export const onDidUnregisterContainerConnection: Event<UnregisterContainerConnectionEvent>;
+    export const onDidRegisterContainerConnection: Event<UnregisterContainerConnectionEvent>;
   }
 
   export interface ProxySettings {
