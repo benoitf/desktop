@@ -306,6 +306,12 @@ declare module '@tmpwip/extension-api' {
     export function executeCommand<T = unknown>(command: string, ...rest: any[]): PromiseLike<T>;
   }
 
+  export interface ProviderEvent {
+    id: string;
+    name: string;
+    status: ProviderStatus;
+  }
+
   export interface UnregisterContainerConnectionEvent {
     providerId: string;
   }
@@ -320,6 +326,7 @@ declare module '@tmpwip/extension-api' {
   }
   export namespace provider {
     export function createProvider(provider: ProviderOptions): Provider;
+    export const onDidUpdateProvider: Event<ProviderEvent>;
     export const onDidUnregisterContainerConnection: Event<UnregisterContainerConnectionEvent>;
     export const onDidRegisterContainerConnection: Event<UnregisterContainerConnectionEvent>;
   }

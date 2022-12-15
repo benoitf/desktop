@@ -288,7 +288,16 @@ export class ExtensionLoader {
           images.icon = instance.updateImage(images.icon, extensionPath);
           images.logo = instance.updateImage(images.logo, extensionPath);
         }
-        return containerProviderRegistry.createProvider(providerOptions);
+        return providerRegistry.createProvider(providerOptions);
+      },
+      onDidUpdateProvider: (listener, thisArg, disposables) => {
+        return providerRegistry.onDidUpdateProvider(listener, thisArg, disposables);
+      },
+      onDidUnregisterContainerConnection: (listener, thisArg, disposables) => {
+        return providerRegistry.onDidUnregisterContainerConnection(listener, thisArg, disposables);
+      },
+      onDidRegisterContainerConnection: (listener, thisArg, disposables) => {
+        return providerRegistry.onDidRegisterContainerConnection(listener, thisArg, disposables);
       },
     };
 
