@@ -896,8 +896,21 @@ export class PluginSystem {
         _listener: Electron.IpcMainInvokeEvent,
         internalProviderId: string,
         params: { [key: string]: unknown },
+        loggerId: string,
       ): Promise<void> => {
-        return providerRegistry.createContainerProviderConnection(internalProviderId, params);
+        const logHandler: containerDesktopAPI.Logger = {
+          log: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'log', data);
+          },
+          warn: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'warn', data);
+          },
+          error: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'error', data);
+          },
+        };
+
+        return providerRegistry.createContainerProviderConnection(internalProviderId, params, logHandler);
       },
     );
 
@@ -907,8 +920,21 @@ export class PluginSystem {
         _listener: Electron.IpcMainInvokeEvent,
         internalProviderId: string,
         params: { [key: string]: unknown },
+        loggerId: string,
       ): Promise<void> => {
-        return providerRegistry.createKubernetesProviderConnection(internalProviderId, params);
+        const logHandler: containerDesktopAPI.Logger = {
+          log: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'log', data);
+          },
+          warn: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'warn', data);
+          },
+          error: (...data: unknown[]) => {
+            this.getWebContentsSender().send('provider-registry:createConnection-onData', loggerId, 'error', data);
+          },
+        };
+
+        return providerRegistry.createKubernetesProviderConnection(internalProviderId, params, logHandler);
       },
     );
 
