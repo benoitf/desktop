@@ -119,7 +119,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PODMAN_DESKTOP_BOT_TOKEN }}
 
   build:
-    name: Build / ${{ matrix.os }}
+    name: Build / ${{ matrix.os }} ${{ matrix.airgap == 'true' && '(Air Gap)' || ''  }}
     needs: tag
     runs-on: ${{ matrix.os }}
     strategy:
