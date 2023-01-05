@@ -1,7 +1,7 @@
 {
   "name": "podman-desktop",
   "productName": "Podman Desktop",
-  "repository": "https://github.com/containers/podman-desktop",
+  "repository": "https://github.com/benoitf/desktop",
   "version": "0.11.0-next",
   "license": "apache-2.0",
   "type": "module",
