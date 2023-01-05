@@ -250,7 +250,6 @@ abstract class BaseInstaller implements Installer {
   requireUpdate(installedVersion: string): boolean {
     return compare(installedVersion, getBundledPodmanVersion(), '<');
   }
-
 }
 
 class WinInstaller extends BaseInstaller {
@@ -300,10 +299,7 @@ class MacOSInstaller extends BaseInstaller {
       progress.report({ increment: 5 });
       const pkgArch = process.arch === 'arm64' ? 'aarch64' : 'amd64';
 
-      const pkgPath = path.resolve(
-        getAssetsFolder(),
-        `podman-installer-macos-${pkgArch}-v${podmanTool.version}.pkg`,
-      );
+      const pkgPath = path.resolve(getAssetsFolder(), `podman-installer-macos-${pkgArch}-v${podmanTool.version}.pkg`);
       try {
         if (fs.existsSync(pkgPath)) {
           const runResult = await runCliCommand('open', [pkgPath, '-W']);

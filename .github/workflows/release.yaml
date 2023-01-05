@@ -124,7 +124,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022, ubuntu-20.04, macos-11]
+        include:
+          - os: "windows-2022"
+          - os: "windows-2022"
+            airgap: "true"
+          - os: "macos-11"
+          - os: "macos-11"
+            airgap: "true"
+          - os: "ubuntu-20.04"
     timeout-minutes: 60
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -185,28 +192,12 @@ jobs:
           sudo apt-get install elfutils -y
           flatpak remote-add --if-not-exists flathub --user https://flathub.org/repo/flathub.flatpakrepo
           flatpak install flathub --user -y org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
-      - name: Set macOS environment variables
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          echo "CSC_LINK=${{secrets.CSC_LINK}}" >> $GITHUB_ENV
-          echo "CSC_KEY_PASSWORD=${{secrets.CSC_KEY_PASSWORD}}" >> $GITHUB_ENV
-          echo "APPLE_ID=${{secrets.APPLE_ID}}" >> $GITHUB_ENV
-          echo "APPLE_ID_PASSWORD=${{secrets.APPLE_ID_PASSWORD}}" >> $GITHUB_ENV
-          echo "APPLE_TEAM_ID=${{secrets.APPLE_TEAM_ID}}" >> $GITHUB_ENV
-
-      - name: Install Azure SignTool on Windows
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          dotnet tool install --global AzureSignTool --version 3.0.0
-          echo "AZURE_KEY_VAULT_CERTIFICATE=${{secrets.AZURE_KEY_VAULT_CERTIFICATE}}" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "AZURE_KEY_VAULT_CLIENT_ID=${{secrets.AZURE_KEY_VAULT_CLIENT_ID}}" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "AZURE_KEY_VAULT_SECRET=${{secrets.AZURE_KEY_VAULT_SECRET}}" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "AZURE_KEY_VAULT_TENANT_ID=${{secrets.AZURE_KEY_VAULT_TENANT_ID}}" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "AZURE_KEY_VAULT_URL=${{secrets.AZURE_KEY_VAULT_URL}}" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Run Build
         timeout-minutes: 40
-        run: yarn compile:next
+        env:
+          AIRGAP_DOWNLOAD: ${{ matrix.airgap == 'true' && '1' || ''  }}
+        run: env && yarn compile:next
 
   release:
     needs: [tag, build]
