@@ -74,10 +74,10 @@ const config = {
   },
   files: ['packages/**/dist/**', 'extensions/**/builtin/*.cdix/**'],
   portable: {
-    artifactName: 'podman-desktop${artifactNameSuffix}-${version}.${ext}',
+    artifactName: `podman-desktop${artifactNameSuffix}-\${version}.\${ext}`,
   },
   nsis: {
-    artifactName: 'podman-desktop${artifactNameSuffix}-${version}-setup.${ext}',
+    artifactName: `podman-desktop${artifactNameSuffix}-\${version}-setup.\${ext}`,
   },
   win: {
     target: ['portable', 'nsis'],
@@ -119,7 +119,7 @@ const config = {
   },
   afterSign: 'electron-builder-notarize',
   mac: {
-    artifactName: 'podman-desktop${artifactNameSuffix}-${version}-${arch}.${ext}',
+    artifactName: `podman-desktop${artifactNameSuffix}-\${version}-\${arch}.\${ext}`,
     hardenedRuntime: true,
     entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
     target: {
