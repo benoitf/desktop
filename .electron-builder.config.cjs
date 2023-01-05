@@ -151,6 +151,13 @@ const config = {
   },*/
 };
 
+// do not publish auto-update files for airgap mode
+if (process.env.AIRGAP_DOWNLOAD) {
+  config.publish = {
+    publishAutoUpdate: false,
+  };
+}
+
 const azureCodeSign = filePath => {
   if (!process.env.AZURE_KEY_VAULT_URL) {
     console.log('Skipping code signing, no environment variables set for that.');
