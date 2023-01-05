@@ -155,6 +155,7 @@ const config = {
 if (process.env.AIRGAP_DOWNLOAD) {
   config.publish = {
     publishAutoUpdate: false,
+    provider: 'github'
   };
 }
 
