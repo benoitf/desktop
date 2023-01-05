@@ -125,6 +125,9 @@ jobs:
     strategy:
       matrix:
         os: [windows-2022, ubuntu-20.04, macos-11]
+        include:
+          - os: windows-2022
+            airgap: true
     timeout-minutes: 60
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -206,7 +209,9 @@ jobs:
 
       - name: Run Build
         timeout-minutes: 40
-        run: yarn compile:next
+        env:
+          AIRGAP_DOWNLOAD: ${{ matrix.airgap == 'true' && '1' || ''  }}
+        run: env && yarn compile:next
 
   release:
     needs: [tag, build]
