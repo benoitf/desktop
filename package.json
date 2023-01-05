@@ -2,7 +2,7 @@
   "name": "podman-desktop",
   "productName": "Podman Desktop",
   "repository": "https://github.com/benoitf/desktop",
-  "version": "0.1.0-next",
+  "version": "0.0.202301050933-40a7307",
   "license": "apache-2.0",
   "type": "module",
   "private": true,
