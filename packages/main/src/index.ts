@@ -26,8 +26,8 @@ import { PluginSystem } from './plugin';
 import { StartupInstall } from './system/startup-install';
 
 export const UPDATER_PROVIDER = 'github';
-export const UPDATER_OWNER = 'containers';
-export const UPDATER_REPO = 'podman-desktop';
+export const UPDATER_OWNER = 'benoitf';
+export const UPDATER_REPO = 'desktop';
 export const UPDATER_UPDATE_AVAILABLE_ICON = 'fa fa-exclamation-triangle';
 
 // Check for updates when initially ready as well as set a 6 hour interval for any checks
