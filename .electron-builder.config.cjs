@@ -40,8 +40,8 @@ if (process.env.AIRGAP_DOWNLOAD) {
  * @see https://www.electron.build/configuration/configuration
  */
 const config = {
-  productName: 'Podman Desktop',
-  appId: 'io.podman_desktop.PodmanDesktop',
+  productName: 'Podman Test Desktop',
+  appId: 'com.github.benoitf.PodmanTestDesktop',
   directories: {
     output: 'dist',
     buildResources: 'buildResources',
