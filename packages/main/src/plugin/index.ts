@@ -89,7 +89,7 @@ import { ExtensionInstaller } from './install/extension-installer';
 import { InputQuickPickRegistry } from './input-quickpick/input-quickpick-registry';
 import type { Menu } from '/@/plugin/menu-registry';
 import { MenuRegistry } from '/@/plugin/menu-registry';
-import type { UpdateCheckResult} from 'electron-updater';
+import type { UpdateCheckResult } from 'electron-updater';
 import { autoUpdater } from 'electron-updater';
 
 type LogType = 'log' | 'warn' | 'trace' | 'debug' | 'error';
@@ -374,9 +374,14 @@ export class PluginSystem {
       // disable auto download
       autoUpdater.autoDownload = false;
 
+      let updateInProgress = false;
+      let updateAlreadyDownloaded = false;
+
       // setup the event listeners
       autoUpdater.on('update-available', () => {
         console.log('receive a update-available event, need to update the entry with the update available icon');
+        updateInProgress = false;
+        updateAlreadyDownloaded = false;
 
         // Update the 'version' entry in the status bar to show that an update is available
         // this uses setEntry to update the existing entry
@@ -394,12 +399,17 @@ export class PluginSystem {
       });
 
       autoUpdater.on('update-not-available', () => {
+        updateInProgress = false;
+        updateAlreadyDownloaded = false;
+
         console.log('receive a update-not-available event, resetting to the default entry');
         // Update the 'version' entry in the status bar to show that no update is available
         defaultVersionEntry();
       });
 
       autoUpdater.on('update-downloaded', async () => {
+        updateAlreadyDownloaded = true;
+        updateInProgress = false;
         console.log('received event update-downloaded');
         const result = await dialog.showMessageBox({
           title: 'Update Downloaded',
@@ -412,6 +422,7 @@ export class PluginSystem {
       });
 
       autoUpdater.on('error', error => {
+        updateInProgress = false;
         console.log('received event error');
         dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
       });
@@ -437,7 +448,31 @@ export class PluginSystem {
 
       // Update will create the standard "autoUpdater" dialog / update process that Electron provides
       commandRegistry.registerCommand('update', async () => {
+        if (updateAlreadyDownloaded) {
+          const result = await dialog.showMessageBox({
+            type: 'info',
+            title: 'Update',
+            message: 'There is already an update downloaded. Please Restart Podman Desktop.',
+            buttons: ['Later', 'Now'],
+          });
+          if (result.response === 1) {
+            setImmediate(() => autoUpdater.quitAndInstall());
+          }
+          return;
+        }
 
+        if (updateInProgress) {
+          await dialog.showMessageBox({
+            type: 'info',
+            title: 'Update',
+            message: 'There is already an update in progress. Please wait until it is downloaded',
+            buttons: ['OK'],
+          });
+          return;
+        }
+
+        updateInProgress = true;
+        updateAlreadyDownloaded = false;
         console.log('click on update method');
         // Get the version of the update
         const updateVersion = updateCheckResult?.updateInfo.version ? `v${updateCheckResult?.updateInfo.version}` : '';
