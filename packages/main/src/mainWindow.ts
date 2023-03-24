@@ -17,6 +17,7 @@
  ***********************************************************************/
 
 import type { BrowserWindowConstructorOptions, FileFilter } from 'electron';
+import { autoUpdater } from 'electron';
 import { Menu } from 'electron';
 import { BrowserWindow, ipcMain, app, dialog, screen, nativeTheme } from 'electron';
 import contextMenu from 'electron-context-menu';
@@ -119,7 +120,23 @@ async function createWindow() {
     configurationRegistry = data;
   });
 
+  let quitAfterUpdate = false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  autoUpdater.on('before-quit-for-update', () => {
+    console.log('receive2 before-quit-for-update event');
+    quitAfterUpdate = true;
+  });
+
   browserWindow.on('close', e => {
+    console.log('receive close event');
+    console.log('quitAfterUpdate is', quitAfterUpdate, 'so we will quit now');
+    if (quitAfterUpdate) {
+      console.log('destroy and quit...');
+      browserWindow.destroy();
+      app.quit();
+      return;
+    }
+
     const closeBehaviorConfiguration = configurationRegistry?.getConfiguration('preferences');
     let exitonclose = isLinux(); // default value, which we will use unless the user preference is available.
     if (closeBehaviorConfiguration) {
@@ -139,6 +156,7 @@ async function createWindow() {
   });
 
   app.on('before-quit', () => {
+    console.log('receive before-quit event');
     browserWindow.destroy();
   });
 

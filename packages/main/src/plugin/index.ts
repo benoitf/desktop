@@ -471,8 +471,6 @@ export class PluginSystem {
           return;
         }
 
-        updateInProgress = true;
-        updateAlreadyDownloaded = false;
         console.log('click on update method');
         // Get the version of the update
         const updateVersion = updateCheckResult?.updateInfo.version ? `v${updateCheckResult?.updateInfo.version}` : '';
@@ -485,6 +483,9 @@ export class PluginSystem {
           buttons: ['Update', 'Later'],
         });
         if (result.response === 0) {
+          updateInProgress = true;
+          updateAlreadyDownloaded = false;
+
           // Download update and try / catch it and create a dialog if it fails
           try {
             await autoUpdater.downloadUpdate();

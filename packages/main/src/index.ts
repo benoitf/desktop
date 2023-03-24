@@ -24,8 +24,7 @@ import { isMac, isWindows } from './util';
 import { AnimatedTray } from './tray-animate-icon';
 import { PluginSystem } from './plugin';
 import { StartupInstall } from './system/startup-install';
-import { autoUpdater } from 'electron-updater';
-
+import { autoUpdater } from 'electron';
 export const UPDATER_UPDATE_AVAILABLE_ICON = 'fa fa-exclamation-triangle';
 
 /**
@@ -43,11 +42,11 @@ app.on('second-instance', restoreWindow);
  */
 app.disableHardwareAcceleration();
 
-let quiteAfterUpdate = false;
+let quitAfterUpdate = false;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(autoUpdater as any).on('before-quit-for-update', () => {
-  console.log('receive before-quit-for-update event');
-  quiteAfterUpdate = true;
+autoUpdater.on('before-quit-for-update', () => {
+  console.log('receive1 before-quit-for-update event');
+  quitAfterUpdate = true;
 });
 
 /**
@@ -56,7 +55,7 @@ let quiteAfterUpdate = false;
 app.on('window-all-closed', () => {
   console.log('receive window-all-closed event');
   // quit the app if it is part of the update process
-  if (quiteAfterUpdate) {
+  if (quitAfterUpdate) {
     app.quit();
     return;
   }
