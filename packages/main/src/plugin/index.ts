@@ -374,25 +374,7 @@ export class PluginSystem {
       // disable auto download
       autoUpdater.autoDownload = false;
 
-      let updateCheckResult: UpdateCheckResult | null;
-
-      // check for updates now
-      console.log('check for updates...');
-      try {
-        updateCheckResult = await autoUpdater.checkForUpdates();
-      } catch (error) {
-        console.log('unable to check for updates', error);
-      }
-
-      // Create an interval to check for updates every 12 hours
-      setInterval(async () => {
-        try {
-          updateCheckResult = await autoUpdater.checkForUpdates();
-        } catch (error) {
-          console.log('unable to check for updates', error);
-        }
-      }, 1000 * 60 * 60 * 12);
-
+      // setup the event listeners
       autoUpdater.on('update-available', () => {
         console.log('receive a update-available event, need to update the entry with the update available icon');
 
@@ -433,6 +415,25 @@ export class PluginSystem {
         console.log('received event error');
         dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
       });
+
+      // check for updates now
+      console.log('check for updates... now');
+      let updateCheckResult: UpdateCheckResult | null;
+
+      try {
+        updateCheckResult = await autoUpdater.checkForUpdates();
+      } catch (error) {
+        console.log('unable to check for updates', error);
+      }
+
+      // Create an interval to check for updates every 12 hours
+      setInterval(async () => {
+        try {
+          updateCheckResult = await autoUpdater.checkForUpdates();
+        } catch (error) {
+          console.log('unable to check for updates', error);
+        }
+      }, 1000 * 60 * 60 * 12);
 
       // Update will create the standard "autoUpdater" dialog / update process that Electron provides
       commandRegistry.registerCommand('update', async () => {
