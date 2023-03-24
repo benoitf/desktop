@@ -377,6 +377,7 @@ export class PluginSystem {
       let updateCheckResult: UpdateCheckResult | null;
 
       // check for updates now
+      console.log('check for updates...');
       try {
         updateCheckResult = await autoUpdater.checkForUpdates();
       } catch (error) {
@@ -393,6 +394,8 @@ export class PluginSystem {
       }, 1000 * 60 * 60 * 12);
 
       autoUpdater.on('update-available', () => {
+        console.log('receive a update-available event, need to update the entry with the update available icon');
+
         // Update the 'version' entry in the status bar to show that an update is available
         // this uses setEntry to update the existing entry
         statusBarRegistry.setEntry(
@@ -409,11 +412,13 @@ export class PluginSystem {
       });
 
       autoUpdater.on('update-not-available', () => {
+        console.log('receive a update-not-available event, resetting to the default entry');
         // Update the 'version' entry in the status bar to show that no update is available
         defaultVersionEntry();
       });
 
       autoUpdater.on('update-downloaded', async () => {
+        console.log('received event update-downloaded');
         const result = await dialog.showMessageBox({
           title: 'Update Downloaded',
           message: 'Update downloaded, Do you want to restart Podman Desktop ?',
@@ -425,13 +430,17 @@ export class PluginSystem {
       });
 
       autoUpdater.on('error', error => {
+        console.log('received event error');
         dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
       });
 
       // Update will create the standard "autoUpdater" dialog / update process that Electron provides
       commandRegistry.registerCommand('update', async () => {
+
+        console.log('click on update method');
         // Get the version of the update
         const updateVersion = updateCheckResult?.updateInfo.version ? `v${updateCheckResult?.updateInfo.version}` : '';
+        console.log('click on update method, version is', updateVersion);
 
         const result = await dialog.showMessageBox({
           type: 'info',
