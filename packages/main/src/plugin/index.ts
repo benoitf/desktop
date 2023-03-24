@@ -411,7 +411,9 @@ export class PluginSystem {
         const result = await dialog.showMessageBox({
           title: 'Update Downloaded',
           message: 'Update downloaded, Do you want to restart Podman Desktop ?',
-          buttons: ['Cancel', 'Restart'],
+          cancelId: 1,
+          type: 'info',
+          buttons: ['Restart', 'Cancel'],
         });
         if (result.response === 0) {
           setImmediate(() => autoUpdater.quitAndInstall());
@@ -449,9 +451,10 @@ export class PluginSystem {
             type: 'info',
             title: 'Update',
             message: 'There is already an update downloaded. Please Restart Podman Desktop.',
-            buttons: ['Cancel', 'Restart'],
+            cancelId: 1,
+            buttons: ['Restart', 'Cancel'],
           });
-          if (result.response === 1) {
+          if (result.response === 0) {
             setImmediate(() => autoUpdater.quitAndInstall());
           }
           return;
@@ -474,9 +477,10 @@ export class PluginSystem {
           type: 'info',
           title: 'Update Available',
           message: `A new version ${updateVersion} of Podman Desktop is available. Do you want to update your current version ${currentVersion}?`,
-          buttons: ['Cancel', 'Update'],
+          buttons: ['Update', 'Cancel'],
+          cancelId: 1,
         });
-        if (result.response === 1) {
+        if (result.response === 0) {
           updateInProgress = true;
           updateAlreadyDownloaded = false;
 
