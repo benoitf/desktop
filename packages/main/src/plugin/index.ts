@@ -956,6 +956,12 @@ export class PluginSystem {
       return commandRegistry.executeCommand(command, ...args);
     });
 
+    this.ipcHandle('command-registry:registerRemoteCommand', async (_, command: string, commandId: number): Promise<void> => {
+      await commandRegistry.registerCommand(command, async (...args) => {
+        await this.getWebContentsSender().send('command-registry:registerRemoteCommand-onData', commandId, args);
+      });
+    });
+
     this.ipcHandle('clipboard:writeText', async (_, text: string, type?: 'selection' | 'clipboard'): Promise<void> => {
       return clipboard.writeText(text, type);
     });

@@ -723,6 +723,30 @@ function initExposure(): void {
     return ipcInvoke('command-registry:executeCommand', command, ...args);
   });
 
+
+   let registerCommandId = 0;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const registeredCommands = new Map<number, (...args: any[]) => any>();
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   contextBridge.exposeInMainWorld('registerCommand', async (command: string, callback: (...args: any[]) => any): Promise<void> => {
+    // keep the callback on the renderer side
+    registerCommandId++;
+    registeredCommands.set(registerCommandId, callback);
+    return ipcInvoke('command-registry:registerRemoteCommand', command, registerCommandId);
+  });
+  ipcRenderer.on(
+    'command-registry:registerRemoteCommand-onData',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (_, registerRemoteCommandCallbackId: number, args: any[]) => {
+      // grab callback from the map
+      const callback = registeredCommands.get(registerRemoteCommandCallbackId);
+      if (callback) {
+        callback(args);
+      }
+    },
+  );
+
+
   contextBridge.exposeInMainWorld(
     'clipboardWriteText',
     async (text: string, type?: 'selection' | 'clipboard'): Promise<void> => {
