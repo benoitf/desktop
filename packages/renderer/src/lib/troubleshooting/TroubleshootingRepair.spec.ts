@@ -16,12 +16,19 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-/**
- * Type of button:
- *  primary   - a main action (the default)
- *  secondary - a secondary action
- *  danger     - a danger action
- *  link      - close, cancel, or other non-default button
- *  tab       - displayed as tab
- */
-export type ButtonType = 'primary' | 'secondary' | 'danger' | 'link' | 'tab';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import '@testing-library/jest-dom/vitest';
+import { beforeAll, test, expect } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
+import TroubleshootingRepair from './TroubleshootingRepair.svelte';
+
+beforeAll(() => {});
+
+test('Check widget is there', async () => {
+  render(TroubleshootingRepair, {});
+
+  // check the repair title is there
+  const repairDiv = screen.getByText('Repair', { exact: true });
+  expect(repairDiv).toBeInTheDocument();
+});

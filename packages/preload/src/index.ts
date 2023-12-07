@@ -689,6 +689,10 @@ function initExposure(): void {
     },
   );
 
+  contextBridge.exposeInMainWorld('cleanupProviders', async (providerIds?: string[]): Promise<void> => {
+    return ipcInvoke('provider-registry:cleanup', providerIds);
+  });
+
   const preflightChecksCallbacks = new Map<number, PreflightChecksCallback>();
   let checkCallbackId = 0;
   contextBridge.exposeInMainWorld(

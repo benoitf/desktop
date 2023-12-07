@@ -5,6 +5,7 @@ import { providerInfos } from '/@/stores/providers';
 import { type Unsubscriber } from 'svelte/store';
 import type { ProviderInfo } from '../../../../main/src/plugin/api/provider-info';
 import TroubleshootingContainerEngines from './TroubleshootingContainerEngines.svelte';
+import TroubleshootingRepair from './TroubleshootingRepair.svelte';
 
 let providers: ProviderInfo[] = [];
 
@@ -20,5 +21,7 @@ onDestroy(() => {
   providersUnsubscribe?.();
 });
 </script>
+
+<TroubleshootingRepair providers="{providers}" />
 
 <TroubleshootingContainerEngines providers="{providers}" />

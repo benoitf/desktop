@@ -31,6 +31,8 @@ $: {
   if (disabled || inProgress) {
     if (type === 'primary' || type === 'secondary') {
       classes = 'bg-charcoal-50';
+    } else if (type === 'danger') {
+      classes = 'border-2 border-gray-700 bg-charcoal-800';
     } else {
       classes = 'text-charcoal-50 no-underline';
     }
@@ -39,6 +41,8 @@ $: {
       classes = 'bg-purple-600 border-none text-white hover:bg-purple-500';
     } else if (type === 'secondary') {
       classes = 'border-[1px] border-gray-200 text-white hover:border-purple-500 hover:text-purple-500';
+    } else if (type === 'danger') {
+      classes = 'border-2 border-red-600 text-white bg-charcoal-700 hover:bg-charcoal-400';
     } else if (type === 'tab') {
       classes = 'pb-2 border-b-[3px] border-charcoal-700 hover:cursor-pointer py-2 text-gray-600 no-underline';
     } else {
