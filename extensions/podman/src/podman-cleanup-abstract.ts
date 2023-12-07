@@ -34,8 +34,11 @@ export abstract class AbsPodmanCleanup implements ProviderCleanup {
 
   async removePodmanFolders(): Promise<void> {
     // now, delete all podman folders
+    console.log('delete folders...');
     for (const folder of this.getFoldersToDelete()) {
+      console.log('folder is', folder);
       if (existsSync(folder)) {
+        console.log('folder exists, deleting...', folder);
         await promises.rm(folder, { recursive: true });
       }
     }
