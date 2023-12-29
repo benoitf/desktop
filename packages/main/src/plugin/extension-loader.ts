@@ -70,6 +70,7 @@ import type { KubeGeneratorRegistry, KubernetesGeneratorProvider } from '/@/plug
 import type { CliToolRegistry } from './cli-tool-registry.js';
 import type { NotificationRegistry } from './notification-registry.js';
 import type { ImageCheckerImpl } from './image-checker.js';
+import type { WebviewRegistry } from './webview-registry.js';
 
 /**
  * Handle the loading of an extension
@@ -161,6 +162,7 @@ export class ExtensionLoader {
     private cliToolRegistry: CliToolRegistry,
     private notificationRegistry: NotificationRegistry,
     private imageCheckerProvider: ImageCheckerImpl,
+    private webviewRegistry: WebviewRegistry,
   ) {
     this.pluginsDirectory = directories.getPluginsDirectory();
     this.pluginsScanDirectory = directories.getPluginsScanDirectory();
@@ -850,6 +852,13 @@ export class ExtensionLoader {
       },
       createCustomPick: <T extends containerDesktopAPI.CustomPickItem>(): containerDesktopAPI.CustomPick<T> => {
         return customPickRegistry.createCustomPick();
+      },
+      createWebviewPanel: (
+        viewType: string,
+        title: string,
+        options?: containerDesktopAPI.WebviewOptions,
+      ): containerDesktopAPI.WebviewPanel => {
+        return this.webviewRegistry.createWebviewPanel(extensionInfo, viewType, title, options);
       },
     };
 

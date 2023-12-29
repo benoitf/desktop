@@ -1,0 +1,44 @@
+{
+  "name": "webview-sample",
+  "displayName": "Webview sample",
+  "description": "Webview sample",
+  "version": "0.0.1",
+  "icon": "icon.png",
+  "publisher": "florent-benoit",
+  "license": "Apache-2.0",
+  "engines": {
+    "podman-desktop": "^0.0.1"
+  },
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+			{
+				"command": "catCoding.start",
+				"title": "Start cat coding session",
+				"category": "Cat Coding"
+			},
+			{
+				"command": "catCoding.doRefactor",
+				"title": "Do some refactoring",
+				"category": "Cat Coding"
+			}
+    ],
+    "icons": {
+    }
+  },
+  "scripts": {
+    "build": "vite build && node ./scripts/build.js",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch --coverage",
+    "watch": "vite build --watch"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "adm-zip": "^0.5.10",
+    "@podman-desktop/api": "^0.0.1",
+    "mkdirp": "^3.0.1",
+    "vite": "^5.0.10",
+    "vitest": "^1.0.4"
+  }
+}

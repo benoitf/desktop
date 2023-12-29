@@ -52,6 +52,7 @@ import type { KubeGeneratorRegistry } from '/@/plugin/kube-generator-registry.js
 import type { CliToolRegistry } from './cli-tool-registry.js';
 import type { NotificationRegistry } from './notification-registry.js';
 import type { ImageCheckerImpl } from './image-checker.js';
+import { WebviewRegistry } from './webview-registry.js';
 
 class TestExtensionLoader extends ExtensionLoader {
   public async setupScanningDirectory(): Promise<void> {
@@ -153,6 +154,8 @@ const notificationRegistry: NotificationRegistry = {} as unknown as Notification
 
 const imageCheckerImpl: ImageCheckerImpl = {} as unknown as ImageCheckerImpl;
 
+const webviewRegistry: WebviewRegistry = {} as unknown as WebviewRegistry;
+
 /* eslint-disable @typescript-eslint/no-empty-function */
 beforeAll(() => {
   extensionLoader = new TestExtensionLoader(
@@ -184,6 +187,7 @@ beforeAll(() => {
     cliToolRegistry,
     notificationRegistry,
     imageCheckerImpl,
+    webviewRegistry,
   );
 });
 
