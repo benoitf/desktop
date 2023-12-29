@@ -42,6 +42,7 @@ import ContextKey from './lib/context/ContextKey.svelte';
 import CreateVolume from './lib/volume/CreateVolume.svelte';
 import CommandPalette from './lib/dialogs/CommandPalette.svelte';
 import Appearance from './lib/appearance/Appearance.svelte';
+import Webview from './lib/webview/Webview.svelte';
 
 router.mode.hash();
 
@@ -174,6 +175,9 @@ window.events?.receive('display-troubleshooting', () => {
         </Route>
         <Route path="/contribs/:name/*" breadcrumb="Extension" let:meta>
           <DockerExtension name="{decodeURI(meta.params.name)}" />
+        </Route>
+        <Route path="/webviews/:id/*" breadcrumb="Webview" let:meta>
+          <Webview id="{meta.params.id}" />
         </Route>
         <Route path="/help" breadcrumb="Help">
           <HelpPage />

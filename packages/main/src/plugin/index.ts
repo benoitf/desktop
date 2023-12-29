@@ -126,6 +126,7 @@ import { Directories } from './directories.js';
 import { CustomPickRegistry } from './custompick/custompick-registry.js';
 import { ViewRegistry } from './view-registry.js';
 import type { ViewInfoUI } from './api/view-info.js';
+import type { WebviewInfo } from './api/webview-info.js';
 import { Context } from './context/context.js';
 import { OnboardingRegistry } from './onboarding-registry.js';
 import type { OnboardingInfo, OnboardingStatus } from './api/onboarding.js';
@@ -149,6 +150,7 @@ import type { KubeContext } from './kubernetes-context.js';
 import { KubernetesInformerManager } from './kubernetes-informer-registry.js';
 import type { KubernetesInformerResourcesType } from './api/kubernetes-informer-info.js';
 import { OpenDevToolsInit } from './open-devtools-init.js';
+import { WebviewRegistry } from './webview-registry.js';
 
 type LogType = 'log' | 'warn' | 'trace' | 'debug' | 'error';
 
@@ -734,6 +736,8 @@ export class PluginSystem {
 
     const imageChecker = new ImageCheckerImpl(apiSender);
 
+    const webviewRegistry = new WebviewRegistry(apiSender);
+
     this.extensionLoader = new ExtensionLoader(
       commandRegistry,
       menuRegistry,
@@ -763,6 +767,7 @@ export class PluginSystem {
       cliToolRegistry,
       notificationRegistry,
       imageChecker,
+      webviewRegistry,
     );
     await this.extensionLoader.init();
 
@@ -2058,6 +2063,9 @@ export class PluginSystem {
     this.ipcHandle('viewRegistry:listViewsContributions', async (_listener): Promise<ViewInfoUI[]> => {
       return viewRegistry.listViewsContributions();
     });
+    this.ipcHandle('webviewRegistry:listWebviews', async (_listener): Promise<WebviewInfo[]> => {
+      return webviewRegistry.listWebviews();
+    });
 
     this.ipcHandle('viewRegistry:fetchViewsContributions', async (_listener, id: string): Promise<ViewInfoUI[]> => {
       return viewRegistry.fetchViewsContributions(id);
@@ -2152,6 +2160,11 @@ export class PluginSystem {
         return imageChecker.check(id, image, token);
       },
     );
+
+    this.ipcHandle('webview:get-preload-script', async (): Promise<string> => {
+      const preloadScriptPath = path.join(__dirname, '../../preload-webview/dist/index.cjs');
+      return `file://${preloadScriptPath}`;
+    });
 
     const dockerDesktopInstallation = new DockerDesktopInstallation(
       apiSender,

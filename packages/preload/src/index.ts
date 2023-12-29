@@ -39,6 +39,7 @@ import type { HistoryInfo } from '../../main/src/plugin/api/history-info';
 import type { ContainerInspectInfo } from '../../main/src/plugin/api/container-inspect-info';
 import type { ContainerStatsInfo } from '../../main/src/plugin/api/container-stats-info';
 import type { IconInfo } from '../../main/src/plugin/api/icon-info';
+import type { WebviewInfo } from '../../main/src/plugin/api/webview-info';
 import type { ExtensionInfo } from '../../main/src/plugin/api/extension-info';
 import type { FeaturedExtension } from '../../main/src/plugin/featured/featured-api';
 import type { CatalogExtension } from '../../main/src/plugin/extensions-catalog/extensions-catalog-api';
@@ -1508,6 +1509,9 @@ function initExposure(): void {
     return ipcInvoke('docker-desktop-plugin:delete', extensionName);
   });
 
+  contextBridge.exposeInMainWorld('getWebviewPreloadPath', async (): Promise<string> => {
+    return ipcInvoke('webview:get-preload-script');
+  });
   contextBridge.exposeInMainWorld('getDDPreloadPath', async (): Promise<string> => {
     return ipcRenderer.invoke('docker-desktop-plugin:get-preload-script');
   });
@@ -1824,6 +1828,9 @@ function initExposure(): void {
 
   contextBridge.exposeInMainWorld('listViewsContributions', async (): Promise<ViewInfoUI[]> => {
     return ipcInvoke('viewRegistry:listViewsContributions');
+  });
+  contextBridge.exposeInMainWorld('listWebviews', async (): Promise<WebviewInfo[]> => {
+    return ipcInvoke('webviewRegistry:listWebviews');
   });
 
   contextBridge.exposeInMainWorld(

@@ -23,6 +23,10 @@ import NewContentOnDashboardBadge from './lib/dashboard/NewContentOnDashboardBad
 import SettingsIcon from './lib/images/SettingsIcon.svelte';
 import DashboardIcon from './lib/images/DashboardIcon.svelte';
 import ServiceIcon from './lib/images/ServiceIcon.svelte';
+import Fa from 'svelte-fa';
+import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
+import { webviews } from './stores/webviews';
+import IconImage from './lib/appearance/IconImage.svelte';
 
 let podInfoSubscribe: Unsubscriber;
 let containerInfoSubscribe: Unsubscriber;
@@ -169,6 +173,16 @@ export let meta: TinroRouteMeta;
   {#each $contributions as contribution}
     <NavItem href="/contribs/{contribution.name}" tooltip="{contribution.name}" bind:meta="{meta}">
       <img src="{contribution.icon}" width="24" height="24" alt="{contribution.name}" />
+    </NavItem>
+  {/each}
+
+  {#each $webviews as webview}
+    <NavItem href="/webviews/{webview.id}" bind:meta="{meta}" tooltip="{webview.name}">
+      {#if !webview.icon}
+        <Fa icon="{faPuzzlePiece}" size="24" />
+      {:else}
+        <IconImage image="{webview?.icon}" alt="{webview.name}" class="max-h-6 max-w-[24px]" />
+      {/if}
     </NavItem>
   {/each}
 

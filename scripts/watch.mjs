@@ -141,6 +141,26 @@ const setupPreloadDockerExtensionPackageWatcher = ({ ws }) =>
     },
   });
 
+  const setupPreloadWebviewPackageWatcher = ({ ws }) =>
+  getWatcher({
+    name: 'reload-page-on-preload-webview-package-change',
+    configFile: 'packages/preload-webview/vite.config.js',
+    writeBundle() {
+      // Generating exposedInWebview.d.ts when preload package is changed.
+      generateAsync({
+        input: 'packages/preload-webview/tsconfig.json',
+        output: 'packages/preload-webview/exposedInWebview.d.ts',
+      });
+
+      if (ws) {
+        ws.send({
+          type: 'full-reload',
+        });
+      }
+    },
+  });
+
+
 /**
  * Start or restart App when source files are changed
  * @param {{ws: import('vite').WebSocketServer}} WebSocketServer
@@ -192,6 +212,7 @@ const setupExtensionApiWatcher = name => {
     }
     await setupPreloadPackageWatcher(viteDevServer);
     await setupPreloadDockerExtensionPackageWatcher(viteDevServer);
+    await setupPreloadWebviewPackageWatcher(viteDevServer);
     await setupMainPackageWatcher(viteDevServer);
   } catch (e) {
     console.error(e);
