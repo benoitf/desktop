@@ -25,15 +25,117 @@ import type { WebviewInfo } from './api/webview-info.js';
 
 type IconPath = Uri | { readonly light: Uri; readonly dark: Uri };
 
+import type { Application } from 'express';
+import express from 'express';
+// // import type { CorsOptions } from 'cors';
+import type * as http from 'node:http';
+// // import cors from 'node:cors';
+import { getFreePort } from './util/port.js';
+
+export class HttpServer {
+
+   #app : Application;
+
+   #instance: http.Server | undefined;
+   
+  constructor(app: Application) {
+    this.#app = app;
+    this.config(app);
+  }
+
+  private config(app: Application): void {
+   /* const corsOptions: CorsOptions = {
+      origin: 'http://localhost:8081',
+    };
+*/
+    // app.use(cors(corsOptions));
+    // app.use(express.json());
+    // app.use(express.urlencoded({ extended: true }));
+  }
+
+  async start(): Promise<void> {
+    // listen on a given port being free
+    const serverPort = await getFreePort(45000);
+
+    console.log('Starting http server to handle webviews on port', serverPort);
+    // now listen on the port
+    await new Promise<void>((resolve, reject) => {
+      this.#instance = this.#app.listen(serverPort, () => {
+        resolve();
+      }).on('error', (err: unknown) => {
+        reject(new Error(String(err)));
+      });
+    });
+  }
+
+  async stop (): Promise<void> {
+    if (!this.#instance) {
+      return;
+    }
+    return new Promise<void>((resolve, reject) => {
+      this.#instance?.close((err: unknown) => {
+        if (err) {
+          reject(new Error(String(err)));
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+}
+
 export class WebviewRegistry {
   #count = 0;
   #webviews: Map<string, WebviewPanelImpl>;
 
   #apiSender: ApiSenderType;
 
+  // express server instance for serving webviews
+  #expressServer: HttpServer;
+
+  #router : express.Router;
+
   constructor(apiSender: ApiSenderType) {
     this.#apiSender = apiSender;
     this.#webviews = new Map();
+
+    const app: Application = express();
+    this.#expressServer= new HttpServer(app);
+
+    this.#router = express.Router({
+      strict: true,
+  });
+
+  this.#router.get('/', (req, res) => {
+    console.log('received request');
+    res.send('hello world /');
+  });
+  
+  this.#router.get('/:extensionId', (req, res) => {
+    console.log('params keys are', Object.keys(req.params));
+    console.log('received request with extensionId', req.params.extensionId);
+
+  // extensionPath is a query parameter
+  const extensionPath = req.query.extensionPath;
+    
+    console.log('received request with extensionPath', extensionPath);
+
+    res.send('hello world');
+  });
+
+  app.use('/', this.#router);
+
+
+  }
+
+  // start the express server
+  async start(): Promise<void> {
+    await this.#expressServer.start();
+  }
+
+  // stop the express server
+  async stop(): Promise<void> {
+      await this.#expressServer.stop();
   }
 
   createWebviewPanel(

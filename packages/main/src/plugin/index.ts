@@ -737,6 +737,7 @@ export class PluginSystem {
     const imageChecker = new ImageCheckerImpl(apiSender);
 
     const webviewRegistry = new WebviewRegistry(apiSender);
+    await webviewRegistry.start();
 
     this.extensionLoader = new ExtensionLoader(
       commandRegistry,
