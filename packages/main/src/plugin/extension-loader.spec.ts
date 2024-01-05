@@ -52,7 +52,7 @@ import type { KubeGeneratorRegistry } from '/@/plugin/kube-generator-registry.js
 import type { CliToolRegistry } from './cli-tool-registry.js';
 import type { NotificationRegistry } from './notification-registry.js';
 import type { ImageCheckerImpl } from './image-checker.js';
-import { WebviewRegistry } from './webview-registry.js';
+import type { WebviewRegistry } from './webview-registry.js';
 
 class TestExtensionLoader extends ExtensionLoader {
   public async setupScanningDirectory(): Promise<void> {

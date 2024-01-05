@@ -130,7 +130,7 @@ export class WebviewImpl implements Webview {
       const subPath = resource.path.substring(this.#extensionInfo.extensionPath.length);
       console.log('subPath is ', subPath);
 
-      return new Uri( 'http', `${this.#uuid}.webview.localhost:9999`, subPath, resource.query, resource.fragment);
+      return new Uri( 'http', `${this.#uuid}.webview.localhost:45000`, `${this.#extensionInfo.id}/extensionPath=${subPath}`, resource.query, resource.fragment);
     }
     throw new Error(`The resource ${resource.toString()} is not supported.`);
   }
