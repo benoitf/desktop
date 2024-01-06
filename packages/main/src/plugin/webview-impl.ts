@@ -20,7 +20,7 @@ import type { Event, Webview, WebviewOptions } from '@podman-desktop/api';
 import { Emitter } from './events/emitter.js';
 import type { ApiSenderType } from './api.js';
 import { Uri } from './types/uri.js';
-import {randomUUID} from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 
 export class WebviewImpl implements Webview {
   readonly #apiSender: ApiSenderType;
@@ -58,7 +58,7 @@ export class WebviewImpl implements Webview {
   }
 
   public get cspSource(): string {
-    return `http://*.webview.localhost:9999/`;
+    return `http://*.webview.localhost:45000/`;
   }
 
   set html(val: string) {
@@ -81,7 +81,7 @@ export class WebviewImpl implements Webview {
   }
 
   // not public interface
-  get uuid():string {
+  get uuid(): string {
     return this.#uuid;
   }
 
@@ -130,7 +130,13 @@ export class WebviewImpl implements Webview {
       const subPath = resource.path.substring(this.#extensionInfo.extensionPath.length);
       console.log('subPath is ', subPath);
 
-      return new Uri( 'http', `${this.#uuid}.webview.localhost:45000`, `${this.#extensionInfo.id}/extensionPath=${subPath}`, resource.query, resource.fragment);
+      return new Uri(
+        'http',
+        `${this.#uuid}.webview.localhost:45000`,
+        `/${this.#extensionInfo.id}?extensionPath=${subPath}`,
+        resource.query,
+        resource.fragment,
+      );
     }
     throw new Error(`The resource ${resource.toString()} is not supported.`);
   }
