@@ -24,36 +24,26 @@ name = matchingWebview?.name;
 let timeout: NodeJS.Timeout;
 
 async function updateData(): Promise<void> {
-// grab matching webview object from the id
+  // grab matching webview object from the id
 
+  console.log('found matching webview', matchingWebview);
 
-console.log('found matching webview', matchingWebview);
-
-
-preloadPath = await window.getWebviewPreloadPath();
-console.log('preload path is', String(preloadPath));
-
+  preloadPath = await window.getWebviewPreloadPath();
+  console.log('preload path is', String(preloadPath));
 }
 
 afterUpdate(() => {
-
-console.log('after update id is', id);
-updateData();
-
-
+  console.log('after update id is', id);
+  updateData();
 });
 
 onMount(async () => {
-
   await updateData();
 
-// after 3s open dev tools
-timeout = setTimeout(() => {
-  (webviewElement as any).openDevTools();
-
-
-
-}, 3000);
+  // after 3s open dev tools
+  timeout = setTimeout(() => {
+    (webviewElement as any).openDevTools();
+  }, 1000);
 });
 
 onDestroy(() => {
@@ -67,29 +57,29 @@ onDestroy(() => {
 let webviewElement: HTMLWebViewElement;
 
 // if matching id, send message to webview
-window.events?.receive('webview-post-message', (webviewEvent: {id: string, message: unknown}) => {
-  console.log('something posted a message to webview', webviewEvent.id, 'with message ', webviewEvent.message, 'and current id is'  , id );
+window.events?.receive('webview-post-message', (webviewEvent: { id: string; message: unknown }) => {
+  console.log(
+    'something posted a message to webview',
+    webviewEvent.id,
+    'with message ',
+    webviewEvent.message,
+    'and current id is',
+    id,
+  );
 
   if (id === webviewEvent.id) {
     console.log('sending message to webview as id is matching', webviewEvent.message);
-    // send message to webview
-    // webviewElement.dispatchEvent(new CustomEvent('message', { detail: webviewEvent.message }));
-    console.log('before send..', webviewElement);
-
     (webviewElement as any).send('webview-post-message', { message: webviewEvent.message });
-    console.log('after send..');
-
-
-    }
-
-
+  }
 });
-
 </script>
 
 {#if source && preloadPath}
   <Route path="/*" breadcrumb="{name}">
-    <!--<webview bind:this="{webviewElement}" src="{source}" preload="{preloadPath}" style="height: 100%; width: 100%"-->
-      <webview bind:this="{webviewElement}" src="http://{matchingWebview?.uuid}.webview.localhost:9999?webviewId={matchingWebview?.id}" preload="{preloadPath}" style="height: 100%; width: 100%"></webview>
+    <webview
+      bind:this="{webviewElement}"
+      src="http://{matchingWebview?.uuid}.webview.localhost:45000?webviewId={matchingWebview?.id}"
+      preload="{preloadPath}"
+      style="height: 100%; width: 100%"></webview>
   </Route>
 {/if}

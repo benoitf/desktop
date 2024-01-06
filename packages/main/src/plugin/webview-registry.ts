@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (C) 2023 Red Hat, Inc.
+ * Copyright (C) 2024 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,27 +31,20 @@ import express from 'express';
 import type * as http from 'node:http';
 // // import cors from 'node:cors';
 import { getFreePort } from './util/port.js';
+import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
 
 export class HttpServer {
+  #app: Application;
 
-   #app : Application;
+  #instance: http.Server | undefined;
 
-   #instance: http.Server | undefined;
-   
   constructor(app: Application) {
     this.#app = app;
     this.config(app);
   }
 
-  private config(app: Application): void {
-   /* const corsOptions: CorsOptions = {
-      origin: 'http://localhost:8081',
-    };
-*/
-    // app.use(cors(corsOptions));
-    // app.use(express.json());
-    // app.use(express.urlencoded({ extended: true }));
-  }
+  private config(_app: Application): void {}
 
   async start(): Promise<void> {
     // listen on a given port being free
@@ -60,15 +53,17 @@ export class HttpServer {
     console.log('Starting http server to handle webviews on port', serverPort);
     // now listen on the port
     await new Promise<void>((resolve, reject) => {
-      this.#instance = this.#app.listen(serverPort, () => {
-        resolve();
-      }).on('error', (err: unknown) => {
-        reject(new Error(String(err)));
-      });
+      this.#instance = this.#app
+        .listen(serverPort, () => {
+          resolve();
+        })
+        .on('error', (err: unknown) => {
+          reject(new Error(String(err)));
+        });
     });
   }
 
-  async stop (): Promise<void> {
+  async stop(): Promise<void> {
     if (!this.#instance) {
       return;
     }
@@ -93,39 +88,79 @@ export class WebviewRegistry {
   // express server instance for serving webviews
   #expressServer: HttpServer;
 
-  #router : express.Router;
+  #router: express.Router;
+
+  #extensionInfoPaths: Map<string, string>;
 
   constructor(apiSender: ApiSenderType) {
     this.#apiSender = apiSender;
     this.#webviews = new Map();
+    this.#extensionInfoPaths = new Map();
 
     const app: Application = express();
-    this.#expressServer= new HttpServer(app);
+    this.#expressServer = new HttpServer(app);
 
     this.#router = express.Router({
       strict: true,
-  });
+    });
 
-  this.#router.get('/', (req, res) => {
-    console.log('received request');
-    res.send('hello world /');
-  });
-  
-  this.#router.get('/:extensionId', (req, res) => {
-    console.log('params keys are', Object.keys(req.params));
-    console.log('received request with extensionId', req.params.extensionId);
+    this.#router.get('/', (req, res) => {
+      console.log('received request');
+      res.send('hello world /');
+    });
 
-  // extensionPath is a query parameter
-  const extensionPath = req.query.extensionPath;
-    
-    console.log('received request with extensionPath', extensionPath);
+    this.#router.get('/:extensionId', (req, res) => {
+      console.log('params keys are', Object.keys(req.params));
+      console.log('received request with extensionId', req.params.extensionId);
 
-    res.send('hello world');
-  });
+      // extensionPath is a query parameter
+      const extensionPath = req.query.extensionPath;
 
-  app.use('/', this.#router);
+      console.log('received request with extensionPath', extensionPath);
 
+      // grab root extensionPath if extensionId is provided
+      if (req.params.extensionId) {
+        const extensionId = req.params.extensionId;
 
+        // grab root path from extensionId
+        const rootExtensionPath = this.#extensionInfoPaths.get(extensionId);
+
+        if (!rootExtensionPath) {
+          res.status(404).send('not found');
+          return;
+        }
+
+        // construct path from root path and extensionPath
+        const fullPath = `${rootExtensionPath}/${extensionPath}`;
+
+        // make it absolute
+        const absolutePath = resolve(fullPath);
+
+        // root path in absolute form
+        const rootExtensionPathAbsolute = resolve(rootExtensionPath);
+
+        // check that path is subfolder of root path
+        if (!absolutePath.startsWith(rootExtensionPathAbsolute)) {
+          res.status(404).send('not found');
+          return;
+        }
+
+        // check that path exists on the filesystem
+        if (!existsSync(absolutePath)) {
+          res.status(404).send('not found');
+          return;
+        }
+
+        // send content of absolute path with express
+        res.sendFile(absolutePath);
+        return;
+      }
+
+      // throw an error (500)
+      res.status(500).send('missing parameter');
+    });
+
+    app.use('/', this.#router);
   }
 
   // start the express server
@@ -135,7 +170,7 @@ export class WebviewRegistry {
 
   // stop the express server
   async stop(): Promise<void> {
-      await this.#expressServer.stop();
+    await this.#expressServer.stop();
   }
 
   createWebviewPanel(
@@ -171,6 +206,7 @@ export class WebviewRegistry {
       viewType,
     });
 
+    this.#extensionInfoPaths.set(extensionInfo.id, extensionInfo.extensionPath);
     this.#webviews.set(webviewPanelImpl.internalId, webviewPanelImpl);
     this.#apiSender.send('webview-create', webviewPanelImpl.internalId);
     console.log('sending webview-create event...');
