@@ -90,12 +90,12 @@ export class WebviewRegistry {
 
   #router: express.Router;
 
-  #extensionInfoPaths: Map<string, string>;
+  #uuidAndPaths: Map<string, string>;
 
   constructor(apiSender: ApiSenderType) {
     this.#apiSender = apiSender;
     this.#webviews = new Map();
-    this.#extensionInfoPaths = new Map();
+    this.#uuidAndPaths = new Map();
 
     const app: Application = express();
     this.#expressServer = new HttpServer(app);
@@ -104,63 +104,70 @@ export class WebviewRegistry {
       strict: true,
     });
 
-    this.#router.get('/', (req, res) => {
-      console.log('received request');
-      res.send('hello world /');
-    });
 
-    this.#router.get('/:extensionId', (req, res) => {
-      console.log('params keys are', Object.keys(req.params));
-      console.log('received request with extensionId', req.params.extensionId);
+    this.#router.get('/*', (req, res) => {
 
-      // extensionPath is a query parameter
-      const extensionPath = req.query.extensionPath;
-
-      console.log('received request with extensionPath', extensionPath);
-
-      // grab root extensionPath if extensionId is provided
-      if (req.params.extensionId) {
-        const extensionId = req.params.extensionId;
-
-        // grab root path from extensionId
-        const rootExtensionPath = this.#extensionInfoPaths.get(extensionId);
-
-        if (!rootExtensionPath) {
-          res.status(404).send('not found');
-          return;
-        }
-
-        // construct path from root path and extensionPath
-        const fullPath = `${rootExtensionPath}/${extensionPath}`;
-
-        // make it absolute
-        const absolutePath = resolve(fullPath);
-
-        // root path in absolute form
-        const rootExtensionPathAbsolute = resolve(rootExtensionPath);
-
-        // check that path is subfolder of root path
-        if (!absolutePath.startsWith(rootExtensionPathAbsolute)) {
-          res.status(404).send('not found');
-          return;
-        }
-
-        // check that path exists on the filesystem
-        if (!existsSync(absolutePath)) {
-          res.status(404).send('not found');
-          return;
-        }
-
-        // send content of absolute path with express
-        res.sendFile(absolutePath);
+      // no referrer, reject request
+      if (!req.headers.referer) {
+        res.status(500).send('invalid request');
         return;
       }
 
-      // throw an error (500)
-      res.status(500).send('missing parameter');
+      // return empty page in  case of root path access
+      if (req.path === '/') {
+        res.send('<html></html>');
+        return;
+      }
+
+        // get uuid of the request using the host
+        // extract 58b7cdef-294f-4ace-93cc-de6e0a139592 from req.hostname 58b7cdef-294f-4ace-93cc-de6e0a139592.webview.localhost
+        // check if hostname matches uuid pattern
+        const uuidPattern = new RegExp('^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$');
+        const uuid = req.hostname.split('.')[0];
+        console.log('uuid is', uuid);
+        if (!uuidPattern.test(uuid)) {
+          res.status(404).send('not found');
+          return;
+        }
+
+        // check if webview with uuid exists
+        const rootExtensionPath = this.#uuidAndPaths.get(uuid);
+
+        if (!rootExtensionPath) {
+
+       // throw an error (500)
+       res.status(500).send('missing parameter');
+       return;
+        }
+
+         // construct path from root path and req.path
+         const fullPath = `${rootExtensionPath}/${req.path}`;
+
+         // make it absolute
+         const absolutePath = resolve(fullPath);
+
+         // root path in absolute form
+         const rootExtensionPathAbsolute = resolve(rootExtensionPath);
+
+         // check that path is subfolder of root path
+         if (!absolutePath.startsWith(rootExtensionPathAbsolute)) {
+           res.status(404).send('not found');
+           return;
+         }
+
+         // check that path exists on the filesystem
+         if (!existsSync(absolutePath)) {
+           res.status(404).send('not found');
+           return;
+         }
+
+         // send content of absolute path with express
+         res.sendFile(absolutePath);
+
     });
 
     app.use('/', this.#router);
+
   }
 
   // start the express server
@@ -206,7 +213,7 @@ export class WebviewRegistry {
       viewType,
     });
 
-    this.#extensionInfoPaths.set(extensionInfo.id, extensionInfo.extensionPath);
+    this.#uuidAndPaths.set(webview.uuid, extensionInfo.extensionPath);
     this.#webviews.set(webviewPanelImpl.internalId, webviewPanelImpl);
     this.#apiSender.send('webview-create', webviewPanelImpl.internalId);
     console.log('sending webview-create event...');

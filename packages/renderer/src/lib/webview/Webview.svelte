@@ -78,6 +78,7 @@ window.events?.receive('webview-post-message', (webviewEvent: { id: string; mess
   <Route path="/*" breadcrumb="{name}">
     <webview
       bind:this="{webviewElement}"
+      httpreferrer="http://{matchingWebview?.uuid}.webview.localhost:45000"
       src="http://{matchingWebview?.uuid}.webview.localhost:45000?webviewId={matchingWebview?.id}"
       preload="{preloadPath}"
       style="height: 100%; width: 100%"></webview>

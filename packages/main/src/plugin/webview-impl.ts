@@ -133,7 +133,7 @@ export class WebviewImpl implements Webview {
       return new Uri(
         'http',
         `${this.#uuid}.webview.localhost:45000`,
-        `/${this.#extensionInfo.id}?extensionPath=${subPath}`,
+        subPath,
         resource.query,
         resource.fragment,
       );
