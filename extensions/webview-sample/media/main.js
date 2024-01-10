@@ -21,10 +21,10 @@
       // Alert the extension when the cat introduces a bug
       if (Math.random() < Math.min(0.001 * currentCount, 0.05)) {
         // Send a message back to the extension
-         /*podmanDesktopApi.postMessage({
+         podmanDesktopApi.postMessage({
               command: 'alert',
               text: '🐛  on line ' + currentCount
-          });*/
+          });
       }
   }, 100);
 
