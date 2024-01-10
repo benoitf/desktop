@@ -225,6 +225,17 @@ export class WebviewRegistry {
     this.#apiSender.send('webview-delete', webviewPanelImpl.internalId);
   }
 
+  async postMessageToWebview(id: string, message: {data: unknown}): Promise<void> {
+
+    /// grab the webview
+    const webviewPanelImpl = this.#webviews.get(id);
+
+    await webviewPanelImpl?.webview.handleMessage(message.data);
+
+
+  }
+
+
   listWebviews(): WebviewInfo[] {
     return Array.from(this.#webviews.entries()).map(entry => {
       const id = entry[0];

@@ -117,7 +117,7 @@ class CatCodingPanel {
       message => {
         switch (message.command) {
           case 'alert':
-            extensionApi.window.showErrorMessage(message.text);
+            //extensionApi.window.showErrorMessage(message.text);
             return;
         }
       },

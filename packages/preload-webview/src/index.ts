@@ -49,6 +49,13 @@ async function ipcInvoke(channel: string, ...args: any) {
   return result;
 }
 
+function postWebviewMessage(message: any) {
+  ipcInvoke('webviewRegistry:post-message',
+    webviewInfo?.id,
+    message,
+  );
+}
+
 function initExposure(): void {
   let acquiredApi = false;
   const acquirePodmanDesktopApi = function () {
@@ -64,7 +71,7 @@ function initExposure(): void {
         return state;
       },
       postMessage: (msg: any) => {
-        return window.postMessage({ command: 'onmessage', data: msg });
+        return postWebviewMessage({ command: 'onmessage', data: msg });
       },
       setState: function (newState: unknown) {
         state = newState;

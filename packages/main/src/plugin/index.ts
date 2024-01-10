@@ -2067,6 +2067,9 @@ export class PluginSystem {
     this.ipcHandle('webviewRegistry:listWebviews', async (_listener): Promise<WebviewInfo[]> => {
       return webviewRegistry.listWebviews();
     });
+    this.ipcHandle('webviewRegistry:post-message', async (_listener, id: string, message: unknown): Promise<void> => {
+       webviewRegistry.postMessageToWebview(id, message);
+    });
 
     this.ipcHandle('viewRegistry:fetchViewsContributions', async (_listener, id: string): Promise<ViewInfoUI[]> => {
       return viewRegistry.fetchViewsContributions(id);
