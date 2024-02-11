@@ -77,8 +77,8 @@ onMount(async () => {
   // grab all the namespaces (will be useful to provide a drop-down to select the namespace)
   try {
     allNamespaces = await window.kubernetesListNamespaces();
-  } catch (error) {
-    console.debug('Not able to list all namespaces, probably a permission error', error);
+  } catch (e: unknown) {
+    console.debug('Not able to list all namespaces, probably a permission error', e);
   }
 
   // check if there is OpenShift and then grab openshift console URL

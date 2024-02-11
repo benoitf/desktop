@@ -241,7 +241,7 @@ async function getPort(portDescriptor: string): Promise<number | undefined> {
   try {
     // if getFreePort fails, it returns undefined
     return await window.getFreePort(port);
-  } catch (e) {
+  } catch (e: unknown) {
     console.error(e);
     return undefined;
   }
@@ -275,9 +275,9 @@ async function startContainer() {
           ExposedPorts[pair.containerPort] = {};
         }
       });
-  } catch (e) {
-    createError = String(e);
-    console.error('Error while creating container', e);
+  } catch (error: unknown) {
+    createError = String(error);
+    console.error('Error while creating container', error);
     return;
   }
 
