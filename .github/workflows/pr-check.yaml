@@ -56,5 +56,5 @@ jobs:
         run: cd extensions/podman && yarn test
 
       - name: Setup tmate session
-        if: ${{ matrix.os=='ubuntu-24.04'}}
+        if: ${{ matrix.os=='ubuntu-24.04'}} && ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
