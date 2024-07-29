@@ -23,7 +23,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { Server } from 'ssh2';
-import { beforeEach, test, vi } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 
 import { PodmanRemoteSshTunnel } from './podman-remote-ssh-tunnel';
 
@@ -84,7 +84,7 @@ test('should be able to connect', async () => {
   });
 
   // wait that the server is listening
-  await vi.waitFor(() => sshPort > 0);
+  await vi.waitFor(() => expect(sshPort).toBeGreaterThan(0));
 
   // create a npipe/socket server
   // on windows it's an npipe, on macOS a socket file
@@ -109,7 +109,7 @@ test('should be able to connect', async () => {
     listenReady = true;
   });
 
-  await vi.waitFor(() => listenReady);
+  await vi.waitFor(() => expect(listenReady).toBeTruthy());
 
   const podmanRemoteSshTunnel = new TestPodmanRemoteSshTunnel(
     'localhost',
@@ -123,7 +123,7 @@ test('should be able to connect', async () => {
   podmanRemoteSshTunnel.connect();
 
   // wait authenticated and connected
-  await vi.waitFor(() => connected && authenticated && podmanRemoteSshTunnel.isListening());
+  await vi.waitFor(() => expect(connected && authenticated && podmanRemoteSshTunnel.isListening()).toBeTruthy());
 
   let connectedToLocal = false;
   // send a request to the tunnel using the socket path
@@ -131,7 +131,7 @@ test('should be able to connect', async () => {
     connectedToLocal = true;
   });
 
-  await vi.waitFor(() => connectedToLocal);
+  await vi.waitFor(() => expect(connectedToLocal).toBeTruthy());
 
   client.end();
   npipeServer.close();
