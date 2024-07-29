@@ -85,8 +85,8 @@ test('should be able to connect', async () => {
   let socketOrNpipePathLocal: string;
   let socketOrNpipePathRemote: string;
   if (process.platform === 'win32') {
-    socketOrNpipePathLocal = '\\\\.\\pipe\\test-local.sock';
-    socketOrNpipePathRemote = '\\\\.\\pipe\\test-remote.sock';
+    socketOrNpipePathLocal = '\\\\.\\pipe\\test-local';
+    socketOrNpipePathRemote = '\\\\.\\pipe\\test-remote';
   } else {
     socketOrNpipePathLocal = join(tmpdir(), 'test-local.sock');
     socketOrNpipePathRemote = join(tmpdir(), 'test-remote.sock');
