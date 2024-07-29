@@ -40,6 +40,12 @@ beforeEach(() => {
   vi.resetAllMocks();
 });
 
+class TestPodmanRemoteSshTunnel extends PodmanRemoteSshTunnel {
+  isListening(): boolean {
+    return super.isListening();
+  }
+}
+
 // this is a dummy key for testing
 // no leakeage there
 const DUMMY_KEY = `
@@ -105,7 +111,7 @@ test('should be able to connect', async () => {
 
   await vi.waitFor(() => listenReady);
 
-  const podmanRemoteSshTunnel = new PodmanRemoteSshTunnel(
+  const podmanRemoteSshTunnel = new TestPodmanRemoteSshTunnel(
     'localhost',
     sshPort,
     'foo',
@@ -117,7 +123,7 @@ test('should be able to connect', async () => {
   podmanRemoteSshTunnel.connect();
 
   // wait authenticated and connected
-  await vi.waitFor(() => connected && authenticated);
+  await vi.waitFor(() => connected && authenticated && podmanRemoteSshTunnel.isListening());
 
   let connectedToLocal = false;
   // send a request to the tunnel using the socket path

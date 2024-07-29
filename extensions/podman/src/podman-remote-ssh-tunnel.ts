@@ -38,6 +38,8 @@ export class PodmanRemoteSshTunnel {
   #resolveConnected: (value: boolean) => void = () => {};
   #connected: Promise<boolean>;
 
+  #listening: boolean = false;
+
   constructor(
     private host: string,
     private port: number,
@@ -67,6 +69,7 @@ export class PodmanRemoteSshTunnel {
 
   connect(): void {
     this.#reconnect = true;
+    this.#listening = false;
     this.#client = new Client();
     this.#connected = new Promise<boolean>((resolve, _reject) => {
       this.#resolveConnected = resolve;
@@ -75,6 +78,8 @@ export class PodmanRemoteSshTunnel {
     this.#client
       .on('ready', () => {
         this.#status = 'started';
+
+        this.#resolveConnected(true);
 
         // Create a local server to listen on the local file socket
         this.#server = net.createServer(localSocket => {
@@ -120,7 +125,9 @@ export class PodmanRemoteSshTunnel {
         });
 
         // Listen on the local file socket
-        this.#server.listen(this.localPath, () => {});
+        this.#server.listen(this.localPath, () => {
+          this.#listening = true;
+        });
 
         // Handle server error
         this.#server.on('error', err => {
@@ -165,5 +172,9 @@ export class PodmanRemoteSshTunnel {
 
   isConnected(): Promise<boolean> {
     return this.#connected;
+  }
+
+  protected isListening(): boolean {
+    return this.#listening;
   }
 }
