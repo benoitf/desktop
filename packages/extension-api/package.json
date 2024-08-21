@@ -16,6 +16,5 @@
     "build": "",
     "watch": "",
     "publish:next": "yarn publish  --registry=https://registry.npmjs.org/ --no-git-tag-version --new-version 0.0.1-\"$(date +%s)\""
-  },
-  "devDependencies": {}
+  }
 }

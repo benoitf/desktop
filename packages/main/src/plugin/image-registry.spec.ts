@@ -947,9 +947,8 @@ test('searchImages with proxy', async () => {
     noProxy: '',
   });
   imageRegistry = new ImageRegistry(apiSender, telemetry, certificates, proxy);
-  nock('http://myproxy.com:3128')
-    .intercept(r => r.includes('index.docker.io:443'), 'CONNECT')
-    .replyWithError('a proxy error');
+  nock('http://myproxy.com:3128').intercept(r => r.includes('index.docker.io:443'), 'CONNECT');
+  nock('https://index.docker.io').get('/v1/search?q=anything&n=25').replyWithError('a proxy error');
   await expect(imageRegistry.searchImages({ query: 'anything' })).rejects.toThrow('a proxy error');
 });
 

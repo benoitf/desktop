@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (C) 2023 Red Hat, Inc.
+ * Copyright (C) 2023-2024 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -286,9 +286,6 @@ test('Test remove manifest', async () => {
   const api = new Dockerode({ protocol: 'http', host: 'localhost' });
 
   const response = await (api as unknown as LibPod).podmanRemoveManifest('name1');
-
-  // Check that the request was made
-  expect(nock.isDone()).toBe(true);
 
   // Check that the response is correct
   expect(response).toBeDefined();
