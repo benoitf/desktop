@@ -28,7 +28,7 @@ if (process.env.VITE_APP_VERSION === undefined) {
   }`;
 }
 
-let macosArches = ['x64', 'arm64', 'universal'];
+let macosArches = ['arm64'];
 let artifactNameSuffix = '';
 if (process.env.AIRGAP_DOWNLOAD) {
   artifactNameSuffix = '-airgap';

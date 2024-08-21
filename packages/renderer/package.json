@@ -52,9 +52,12 @@
     "yaml": "^2.5.0"
   },
   "dependencies": {
-    "@podman-desktop/ui-svelte": "^0.0.1",
+    "@fortawesome/fontawesome-common-types": "^6.6.0",
+    "@podman-desktop/ui-svelte": "workspace:*",
     "@zerodevx/svelte-toast": "^0.9.5",
+    "buffer": "^6.0.3",
     "electron-context-menu": "^4.0.1",
+    "micromark-util-types": "^2.0.0",
     "tinro": "^0.6.12"
   }
 }
