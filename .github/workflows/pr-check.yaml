@@ -278,4 +278,4 @@ jobs:
         with:
           name: pnpm-store
           path: |
-            ././local-store/
+            ./local-store/
