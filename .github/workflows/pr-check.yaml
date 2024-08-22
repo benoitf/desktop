@@ -268,7 +268,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
 
       - name: Execute pnpm
         run: pnpm install --store-dir ./local-store
