@@ -253,3 +253,29 @@ jobs:
             ./tests/output/
             ./tests/**/output/junit*.xml
             !./tests/**/traces/raw
+
+  pnpm-store:
+    name: pnpm-store
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Execute pnpm
+        run: pnpm install --store-dir ./local-store
+
+      - name: upload local-store
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-store
+          path: |
+            ././local-store/
