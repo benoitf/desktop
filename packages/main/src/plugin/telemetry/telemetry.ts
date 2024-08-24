@@ -387,7 +387,7 @@ export class Telemetry {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   protected async getContext(): Promise<Object> {
     const locale = await this.getLocale();
 

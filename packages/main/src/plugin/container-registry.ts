@@ -1147,7 +1147,6 @@ export class ContainerProviderRegistry {
         authconfig,
         abortSignal: abortController?.signal,
       });
-      // eslint-disable-next-line @typescript-eslint/ban-types
       let resolve: () => void;
       let reject: (err: Error) => void;
       const promise = new Promise<void>((res, rej) => {
@@ -1155,7 +1154,6 @@ export class ContainerProviderRegistry {
         reject = rej;
       });
 
-      // eslint-disable-next-line @typescript-eslint/ban-types
       const onFinished = (err: Error | null): void => {
         if (err) {
           return reject(err);
@@ -2491,7 +2489,7 @@ export class ContainerProviderRegistry {
         throw error;
       }
       eventCollect('stream', `Building ${options?.tag}...\r\n`);
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       let resolve: (output: {}) => void;
       let reject: (err: Error) => void;
       const promise = new Promise((res, rej) => {
@@ -2499,7 +2497,7 @@ export class ContainerProviderRegistry {
         reject = rej;
       });
 
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       const onFinished = (err: Error | null, output: {}): void => {
         if (err) {
           eventCollect('finish', err.message);

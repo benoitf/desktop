@@ -286,7 +286,7 @@ describe.each([
       name: providerInfo.name,
     });
     // expect it is sucessful
-    expect(cancelTokenMock).toBeCalled;
+    expect(cancelTokenMock).toBeCalled();
   });
 
   test('Expect Close button and main image to not be visible if hidden using properties', async () => {
