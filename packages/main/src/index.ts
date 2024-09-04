@@ -31,6 +31,7 @@ import { Emitter } from './plugin/events/emitter.js';
 import type { ExtensionLoader } from './plugin/extension-loader.js';
 import { PluginSystem } from './plugin/index.js';
 import { Deferred } from './plugin/util/deferred.js';
+import { ZoomLevelHandler } from './plugin/zoom-level-handler.js';
 import { StartupInstall } from './system/startup-install.js';
 import { WindowHandler } from './system/window/window-handler.js';
 import { AnimatedTray } from './tray-animate-icon.js';
@@ -251,6 +252,11 @@ app.whenReady().then(
           windowHandler.init();
           // send window Handler
           ipcMain.emit('window-handler', '', windowHandler);
+
+          // Configure the zoom level handler
+          // handle zoom level
+          const zoomLevelHandler = new ZoomLevelHandler(browserWindow, configurationRegistry);
+          zoomLevelHandler.init();
         })
         .catch((error: unknown) => {
           console.error('Error initializing window handler', error);
