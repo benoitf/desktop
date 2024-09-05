@@ -46,7 +46,6 @@ async function createWindow(): Promise<BrowserWindow> {
 
   const browserWindowConstructorOptions: BrowserWindowConstructorOptions = {
     show: false, // Use 'ready-to-show' event to show window
-    // autoHideMenuBar: true, // This makes Podman Desktop look more like a native app
     width: INITIAL_APP_WIDTH,
     minWidth: INITIAL_APP_MIN_WIDTH,
     minHeight: INITIAL_APP_MIN_HEIGHT,
@@ -255,7 +254,7 @@ async function createWindow(): Promise<BrowserWindow> {
           const newSubMenu = Menu.buildFromTemplate([...i.submenu.items, { type: 'separator' }, aboutMenuSubItem]);
           return { ...i, submenu: newSubMenu };
         }
-/*
+
         if (i.role === 'zoomIn') {
           console.log('i role zoom In is', i);
         }
@@ -271,6 +270,16 @@ async function createWindow(): Promise<BrowserWindow> {
               browserWindow.webContents.zoomLevel += 0.5;
             },
           };
+          const newZoomInMenuItemAlt: MenuItemConstructorOptions = {
+            label: 'Zoom InHiiden',
+            visible: true,
+            accelerator: 'CommandOrControl+numadd',
+            click: () => {
+              console.log('This is a custom zoom In Alt click !')
+              browserWindow.webContents.zoomLevel += 0.5;
+            },
+          };
+
 
           // replace the Zoom Out item by a new custom item
           const newZoomOutMenuItem: MenuItemConstructorOptions = {
@@ -281,6 +290,17 @@ async function createWindow(): Promise<BrowserWindow> {
               browserWindow.webContents.zoomLevel -= 0.5;
             },
           };
+          const newZoomOutMenuItemAlt: MenuItemConstructorOptions = {
+            label: 'Zoom OutHiiden',
+            visible: true,
+            accelerator: 'CommandOrControl+numsub',
+            click: () => {
+              console.log('This is a custom zoom Out Alt click !')
+              browserWindow.webContents.zoomLevel -= 0.5;
+            },
+          };
+
+
 
           // replace the Actual item by a new custom item
           const newZoomResetMenuItem: MenuItemConstructorOptions = {
@@ -291,6 +311,13 @@ async function createWindow(): Promise<BrowserWindow> {
               browserWindow.webContents.zoomLevel = 0;
             },
           };
+
+          const items = Menu.buildFromTemplate([newZoomInMenuItemAlt, newZoomOutMenuItemAlt]);
+          console.log('built items, ', items);
+          for (const item of items.items) {
+            console.log('adding item', item);
+            i.submenu.items.push(item);
+          }
 
 
           // replace the "Zoom In" item stored inside the submenu by this one
@@ -306,7 +333,13 @@ async function createWindow(): Promise<BrowserWindow> {
                 return item;
               }
 
+
+
         }),
+
+
+
+
           );
 
 
@@ -314,7 +347,7 @@ async function createWindow(): Promise<BrowserWindow> {
 
           return { ...i, submenu: newSubMenu };
 
-        }*/
+        }
 
         return i;
       }),
