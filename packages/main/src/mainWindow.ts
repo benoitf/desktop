@@ -19,7 +19,7 @@
 import { join } from 'node:path';
 import { URL } from 'node:url';
 
-import type { BrowserWindowConstructorOptions, Rectangle } from 'electron';
+import type { BrowserWindowConstructorOptions, MenuItem, MenuItemConstructorOptions, Rectangle } from 'electron';
 import { app, autoUpdater, BrowserWindow, ipcMain, Menu, nativeTheme, screen } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { aboutMenuItem } from 'electron-util/main';
@@ -46,7 +46,7 @@ async function createWindow(): Promise<BrowserWindow> {
 
   const browserWindowConstructorOptions: BrowserWindowConstructorOptions = {
     show: false, // Use 'ready-to-show' event to show window
-    autoHideMenuBar: true, // This makes Podman Desktop look more like a native app
+    // autoHideMenuBar: true, // This makes Podman Desktop look more like a native app
     width: INITIAL_APP_WIDTH,
     minWidth: INITIAL_APP_MIN_WIDTH,
     minHeight: INITIAL_APP_MIN_HEIGHT,
@@ -255,6 +255,67 @@ async function createWindow(): Promise<BrowserWindow> {
           const newSubMenu = Menu.buildFromTemplate([...i.submenu.items, { type: 'separator' }, aboutMenuSubItem]);
           return { ...i, submenu: newSubMenu };
         }
+/*
+        if (i.role === 'zoomIn') {
+          console.log('i role zoom In is', i);
+        }
+
+        if (i.role?.toLocaleLowerCase() === 'viewmenu' && i.submenu) {
+
+          // replace the Zoom In item by a new custom item
+          const newZoomInMenuItem: MenuItemConstructorOptions = {
+            label: 'Zoom In',
+            accelerator: 'CommandOrControl+Plus',
+            click: () => {
+              console.log('This is a custom zoom In click !')
+              browserWindow.webContents.zoomLevel += 0.5;
+            },
+          };
+
+          // replace the Zoom Out item by a new custom item
+          const newZoomOutMenuItem: MenuItemConstructorOptions = {
+            label: 'Zoom Out',
+            accelerator: 'CommandOrControl+-',
+            click: () => {
+              console.log('This is a custom zoom Out click !')
+              browserWindow.webContents.zoomLevel -= 0.5;
+            },
+          };
+
+          // replace the Actual item by a new custom item
+          const newZoomResetMenuItem: MenuItemConstructorOptions = {
+            label: 'Actual Sizezz',
+            accelerator: 'CommandOrControl+0',
+            click: () => {
+              console.log('This is a custom zoom reset click !')
+              browserWindow.webContents.zoomLevel = 0;
+            },
+          };
+
+
+          // replace the "Zoom In" item stored inside the submenu by this one
+          const newSubMenu = Menu.buildFromTemplate(
+            i.submenu.items.map(item => {
+              if (item.label === 'Zoom In') {
+                return newZoomInMenuItem;
+              } else if (item.label === 'Zoom Out') {
+                return newZoomOutMenuItem;
+              } else if (item.label === 'Actual Size') {
+                return newZoomResetMenuItem;
+              } else {
+                return item;
+              }
+
+        }),
+          );
+
+
+
+
+          return { ...i, submenu: newSubMenu };
+
+        }*/
+
         return i;
       }),
     );
