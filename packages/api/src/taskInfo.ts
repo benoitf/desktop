@@ -17,7 +17,9 @@
  ***********************************************************************/
 
 export type TaskState = 'running' | 'completed';
-export type TaskStatus = 'in-progress' | 'success' | 'failure' | 'canceled';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const TASK_STATUSES = ['in-progress', 'success', 'failure', 'canceled'] as const;
+export type TaskStatus = (typeof TASK_STATUSES)[number];
 
 export type NotificationTaskInfo = Omit<TaskInfo, 'progress' | 'error'> & {
   state: 'completed';

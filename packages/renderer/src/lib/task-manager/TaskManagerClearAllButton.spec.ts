@@ -16,9 +16,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-export enum ExperimentalTasksSettings {
-  SectionName = 'tasks',
-  StatusBar = 'StatusBar',
-  Toast = 'Toast',
-  Manager = 'Manager',
-}
+import '@testing-library/jest-dom/vitest';
+
+import { fireEvent, render, screen } from '@testing-library/svelte';
+import { expect, test, vi } from 'vitest';
+
+import * as taskStores from '/@/stores/tasks';
+
+import TaskManagerClearAllButton from './TaskManagerClearAllButton.svelte';
+
+vi.mock('/@/stores/tasks');
+
+test('Expect clear tasks is being called', async () => {
+  const clearNotificationsSpy = vi.spyOn(taskStores, 'clearNotifications');
+  render(TaskManagerClearAllButton);
+  // expect the button is there
+  const clearAll = screen.getByRole('button', { name: 'Clear all' });
+  expect(clearAll).toBeInTheDocument();
+  // click the button
+  await fireEvent.click(clearAll);
+
+  expect(clearNotificationsSpy).toHaveBeenCalled();
+});

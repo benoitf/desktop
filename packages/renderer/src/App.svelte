@@ -75,6 +75,7 @@ import { lastSubmenuPages } from './stores/breadcrumb';
 import { kubernetesCurrentContextState } from './stores/kubernetes-contexts-state';
 import { navigationRegistry } from './stores/navigation/navigation-registry';
 import SubmenuNavigation from './SubmenuNavigation.svelte';
+import TaskManager from './lib/task-manager/TaskManager.svelte';
 
 router.mode.memory();
 
@@ -133,6 +134,7 @@ window.events?.receive('navigate', (navigationRequest: unknown) => {
         class:bg-[var(--pd-content-bg)]={!meta.url.startsWith('/preferences')}
         class:bg-[var(--pd-invert-content-bg)]={meta.url.startsWith('/preferences')}>
         <LegacyTaskManager />
+        <TaskManager />
         <SendFeedback />
         <ToastHandler />
         <ToastTaskNotifications />

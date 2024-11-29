@@ -16,9 +16,16 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-export enum ExperimentalTasksSettings {
-  SectionName = 'tasks',
-  StatusBar = 'StatusBar',
-  Toast = 'Toast',
-  Manager = 'Manager',
-}
+import '@testing-library/jest-dom/vitest';
+
+import { fireEvent, render, screen } from '@testing-library/svelte';
+import { expect, test, vi } from 'vitest';
+
+import TaskManagerEmptyScreen from './TaskManagerEmptyScreen.svelte';
+
+test('Expect we see the text No Active Tasks', async () => {
+  render(TaskManagerEmptyScreen);
+  // expect to see the text "No active tasks"
+  const noActiveTasks = screen.getByText('No active tasks');
+  expect(noActiveTasks).toBeInTheDocument();
+});
