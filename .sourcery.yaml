@@ -2,7 +2,7 @@ rules:
   - name: enforce-props-interface
     description: Ensure Svelte 5 props use an explicit Props interface
     patterns:
-      - "let {...}:{....} = $props();"
+      - "let {...}:{...} = $props();"
     message: "Use an explicit Props interface when defining Svelte 5 properties."
     severity: error
     tests:
