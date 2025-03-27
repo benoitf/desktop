@@ -1,9 +1,15 @@
 rules:
-  - name: enforce-props-interface
-    description: Ensure Svelte 5 props use an explicit Props interface
+  - name: "Use Interface for Props"
+    description: "Ensure props destructuring uses an interface instead of inline type annotations."
     patterns:
-      - "let {...}:{...} = $props();"
-    message: "Use an explicit Props interface when defining Svelte 5 properties."
+      - pattern: "let { $VARS$ }: { $TYPES$ } = $props();"
+    replacement: |
+      interface Props {
+        $TYPES$
+      }
+      
+      let { $VARS$ }: Props = $props();
+    message: "Define an interface for props instead of using inline type annotations."
     severity: error
     tests:
       - match: let { exitSettingsCallback, meta = $bindable()}: { exitSettingsCallback: () => void; meta: TinroRouteMeta; } = $props();
