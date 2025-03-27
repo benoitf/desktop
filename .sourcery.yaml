@@ -2,10 +2,8 @@ rules:
   - name: enforce-props-interface
     description: Ensure Svelte 5 props use an explicit Props interface
     patterns:
-      - "let {**} = $props();"
-    condition: |
-      not re.match(r"let\s+\{.*\}:\s*Props\s*=\s*\$props\(\);", code)
+      - "let {...}:{....} = $props();"
     message: "Use an explicit Props interface when defining Svelte 5 properties."
     severity: error
-    fix: |
-      let {**}: Props = $props();
+    tests:
+      - match: let { exitSettingsCallback, meta = $bindable()}: { exitSettingsCallback: () => void; meta: TinroRouteMeta; } = $props();
