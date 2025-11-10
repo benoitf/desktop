@@ -62,7 +62,7 @@ jobs:
       - name: Update the yaml file
         run: |
           # Grab the source code of Podman Desktop
-          export PODMAN_DESKTOP_SOURCE_URL="https://github.com/containers/podman-desktop/archive/refs/tags/v${{ steps.VERSION.outputs.desktopVersion }}.tar.gz"
+          export PODMAN_DESKTOP_SOURCE_URL="https://github.com/benoitf/desktop/archive/refs/tags/v${{ steps.VERSION.outputs.desktopVersion }}.tar.gz"
           wget ${PODMAN_DESKTOP_SOURCE_URL} -qO podman-desktop-source.tgz
           # compute shasum256 and take the first column of the text
           export PODMAN_DESKTOP_SOURCE_SHASUM=$(shasum -a 256 podman-desktop-source.tgz | awk '{print $1}')
@@ -70,21 +70,21 @@ jobs:
           echo "podman Desktop source .tgz file sha256 is ${PODMAN_DESKTOP_SOURCE_SHASUM}"
 
           # Grab the pnpm cache for arm64
-          export PNPM_STORE_CACHE_ARM64_URL="https://github.com/containers/podman-desktop/releases/download/v${{ steps.VERSION.outputs.desktopVersion }}/store-cache-pnpm-arm64.tgz"
+          export PNPM_STORE_CACHE_ARM64_URL="https://github.com/benoitf/desktop/releases/download/v${{ steps.VERSION.outputs.desktopVersion }}/store-cache-pnpm-arm64.tgz"
           wget ${PNPM_STORE_CACHE_ARM64_URL} -qO podman-desktop-pnpm-arm64.tgz
           # compute shasum256
           export PODMAN_DESKTOP_PNPM_ARM64_SHASUM=$(shasum -a 256 podman-desktop-pnpm-arm64.tgz | awk '{print $1}')
           echo "podman Desktop pnpm arm64 .tgz file sha256 is ${PODMAN_DESKTOP_PNPM_ARM64_SHASUM}"
 
           # Grab the pnpm cache for amd64
-          export PNPM_STORE_CACHE_AMD64_URL="https://github.com/containers/podman-desktop/releases/download/v${{ steps.VERSION.outputs.desktopVersion }}/store-cache-pnpm-amd64.tgz"
+          export PNPM_STORE_CACHE_AMD64_URL="https://github.com/benoitf/desktop/releases/download/v${{ steps.VERSION.outputs.desktopVersion }}/store-cache-pnpm-amd64.tgz"
           wget ${PNPM_STORE_CACHE_AMD64_URL} -qO podman-desktop-pnpm-amd64.tgz
           # compute shasum256
           export PODMAN_DESKTOP_PNPM_AMD64_SHASUM=$(shasum -a 256 podman-desktop-pnpm-amd64.tgz | awk '{print $1}')
           echo "podman Desktop pnpm amd64 .tgz file sha256 is ${PODMAN_DESKTOP_PNPM_AMD64_SHASUM}"
 
           # grab the package.json of the current tagged version
-          wget "https://raw.githubusercontent.com/podman-desktop/podman-desktop/refs/tags/v${{ steps.VERSION.outputs.desktopVersion }}/package.json" -qO podman-desktop-package.json
+          wget "https://raw.githubusercontent.com/benoitf/desktop/refs/tags/v${{ steps.VERSION.outputs.desktopVersion }}/package.json" -qO podman-desktop-package.json
 
           # set the version of pnpm from this package.json file stored inside "packageManager": "pnpm@10.15.0+sha512.
           PODMAN_DESKTOP_PNPM_VERSION=$(jq -r '.packageManager' podman-desktop-package.json | cut -d '@' -f 2 | cut -d '+' -f 1)
